@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Proyecto</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_discovery">Home</string>
+    <string name="title_library">Dashboard</string>
+    <string name="title_add">Notifications</string>
+    <string name="title_messages">Notifications</string>
     <string name="title_profile">Profile</string>
 </resources>
