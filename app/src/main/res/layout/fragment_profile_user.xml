@@ -13,7 +13,7 @@
         android:paddingBottom="32dp">
 
         <!-- ─────────────────────────────────────── -->
-        <!-- TOOLBAR: BookLoop + perfil              -->
+        <!-- TOOLBAR: ← BookLoop + perfil            -->
         <!-- ─────────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +24,17 @@
             android:background="#FAFAF7">
 
             <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@null" />
+
+            <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_book_logo"
                 android:contentDescription="@null" />
 
@@ -62,7 +71,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="20dp">
 
-            <!-- Foto de perfil grande -->
+            <!-- Foto de perfil -->
             <ImageView
                 android:id="@+id/ivProfilePhoto"
                 android:layout_width="96dp"
@@ -117,7 +126,6 @@
 
                 </LinearLayout>
 
-                <!-- Divisor -->
                 <View
                     android:layout_width="1dp"
                     android:layout_height="28dp"
@@ -149,7 +157,6 @@
 
                 </LinearLayout>
 
-                <!-- Divisor -->
                 <View
                     android:layout_width="1dp"
                     android:layout_height="28dp"
@@ -183,9 +190,9 @@
 
             </LinearLayout>
 
-            <!-- Botón Add Book -->
+            <!-- Botón Message -->
             <LinearLayout
-                android:id="@+id/btnAddBook"
+                android:id="@+id/btnMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="44dp"
                 android:orientation="horizontal"
@@ -199,14 +206,14 @@
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/ic_add"
+                    android:src="@drawable/ic_message"
                     android:contentDescription="@null" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Add Book"
+                    android:text="Message"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="#5A4A3A" />
@@ -391,7 +398,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Avatar + nombre + estrellas -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -420,13 +426,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-
                         </LinearLayout>
 
                     </LinearLayout>
@@ -459,7 +463,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Avatar + nombre + estrellas -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -488,13 +491,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
                             <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-
                         </LinearLayout>
 
                     </LinearLayout>

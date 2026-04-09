@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    book_card_item.xml
+    Layout completo para la card de un libro en BookLoop.
+
+    Estructura:
+    ┌──────────────────────────────┐
+    │  [Portada del libro]         │  ← ImageView con esquinas superiores redondeadas
+    ├──────────────────────────────┤
+    │  Título del libro            │  ← TextView bold
+    │  Nombre del autor            │  ← TextView secondary
+    ├──────────────────────────────┤
+    │  [Foto perfil] Nombre  ★4.9  │  ← Row con perfil + nombre + rating + botón →
+    │                          [→] │
+    └──────────────────────────────┘
+
+    Uso: Inflar este layout en un RecyclerView.Adapter para el feed de Discovery.
+-->
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ══════════════════════════════════════ -->
+        <!-- SECCIÓN 1: Portada del libro           -->
+        <!-- ══════════════════════════════════════ -->
+        <ImageView
+            android:id="@+id/ivBookCover"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/book_card_cover_shape"
+            android:contentDescription="@string/book_cover_description" />
+
+        <!-- ══════════════════════════════════════ -->
+        <!-- SECCIÓN 2: Título y Autor              -->
+        <!-- ══════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvBookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="La casa de los espíritus"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvBookAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Isabel Allende"
+                android:textSize="13sp"
+                android:textColor="#757575" />
+
+        </LinearLayout>
+
+        <!-- Divisor sutil -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="#F0F0F0" />
+
+        <!-- ══════════════════════════════════════ -->
+        <!-- SECCIÓN 3: Perfil del dueño + Botón   -->
+        <!-- ══════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <!-- Foto de perfil circular -->
+            <ImageView
+                android:id="@+id/ivOwnerProfile"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/book_card_profile_image_bg"
+                android:contentDescription="@string/owner_profile_description"
+                android:clipToOutline="true" />
+
+            <!-- Nombre y rating del dueño -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp">
+
+                <TextView
+                    android:id="@+id/tvOwnerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aaron Salas"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A" />
+
+                <!-- Rating con estrella -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="1dp">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:src="@drawable/ic_star"
+                        android:tint="#F5A623"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/tvOwnerRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:text="4.9"
+                        android:textSize="12sp"
+                        android:textColor="#757575" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Botón circular con flecha → -->
+            <ImageButton
+                android:id="@+id/btnViewBook"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/book_card_arrow_button_bg"
+                android:src="@drawable/ic_arrow_forward"
+                android:tint="#FFFFFF"
+                android:padding="10dp"
+                android:contentDescription="@string/view_book_description" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

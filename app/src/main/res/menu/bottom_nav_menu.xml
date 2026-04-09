@@ -8,13 +8,8 @@
 
     <item
         android:id="@+id/navigation_library"
-        android:icon="@drawable/ic_library"
-        android:title="@string/title_library" />
-
-    <item
-        android:id="@+id/navigation_add"
-        android:icon="@drawable/ic_add"
-        android:title="@string/title_add" />
+        android:icon="@drawable/ic_community"
+        android:title="@string/title_community" />
 
     <item
         android:id="@+id/navigation_messages"

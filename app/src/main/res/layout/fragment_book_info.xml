@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FAFAF7">
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- CONTENIDO SCROLLABLE                                   -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- TOOLBAR: ← BookLoop  [perfil]           -->
+            <!-- ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:background="#FFFFFF">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="6dp"
+                    android:src="@drawable/ic_book_logo"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="BookLoop"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#A64534" />
+
+                <ImageView
+                    android:id="@+id/ivHeaderProfile"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/book_card_profile_image_bg"
+                    android:clipToOutline="true"
+                    android:contentDescription="@null" />
+
+            </LinearLayout>
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- PORTADA DEL LIBRO                       -->
+            <!-- ─────────────────────────────────────── -->
+            <ImageView
+                android:id="@+id/ivBookCover"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/placeholder_book_cover"
+                android:contentDescription="@string/book_cover_description" />
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- TÍTULO, AUTOR Y CHIPS                   -->
+            <!-- ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/tvBookTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="La Casa de los espírtus"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A"
+                    android:lineSpacingExtra="2dp" />
+
+                <!-- Autor · Año -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:id="@+id/tvAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Isabel Allende"
+                        android:textSize="14sp"
+                        android:textColor="#757575" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="6dp"
+                        android:text="·"
+                        android:textSize="14sp"
+                        android:textColor="#BDBDBD" />
+
+                    <TextView
+                        android:id="@+id/tvYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1982"
+                        android:textSize="14sp"
+                        android:textColor="#757575" />
+
+                </LinearLayout>
+
+                <!-- Chips: Páginas · Idioma -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="14dp">
+
+                    <!-- Chip páginas -->
+                    <LinearLayout
+                        android:id="@+id/chipPages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="12dp"
+                        android:background="@drawable/bg_chip_info">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_pages"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:id="@+id/tvPages"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="450 Pages"
+                            android:textSize="13sp"
+                            android:textColor="#757575" />
+
+                    </LinearLayout>
+
+                    <!-- Chip idioma -->
+                    <LinearLayout
+                        android:id="@+id/chipLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="12dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_chip_info">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_language"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:id="@+id/tvLanguage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="Spanish"
+                            android:textSize="13sp"
+                            android:textColor="#757575" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="#EEEEEE" />
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- THE STORY                               -->
+            <!-- ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="The Story"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A" />
+
+                <TextView
+                    android:id="@+id/tvStory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="&quot;La casa de los espíritus&quot; de Isabel Allende narra la saga de cuatro generaciones de la familia Trueba-Del Valle en Chile durante el siglo XX."
+                    android:textSize="14sp"
+                    android:textColor="#555555"
+                    android:lineSpacingExtra="4dp" />
+
+            </LinearLayout>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="#EEEEEE" />
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- DUEÑO DEL LIBRO                         -->
+            <!-- ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="20dp">
+
+                <ImageView
+                    android:id="@+id/ivOwnerProfile"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/book_card_profile_image_bg"
+                    android:clipToOutline="true"
+                    android:contentDescription="@null" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="14dp">
+
+                    <TextView
+                        android:id="@+id/tvOwnerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aaron Salas"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A" />
+
+                    <!-- 5 estrellas -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp">
+
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star" android:contentDescription="@null" />
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
+                        <ImageView android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Divisor -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="#EEEEEE" />
+
+            <!-- ─────────────────────────────────────── -->
+            <!-- RECENT REVIEWS                          -->
+            <!-- ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RECENT REVIEWS"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:textColor="#BDBDBD"
+                    android:letterSpacing="0.12" />
+
+                <!-- Review card 1 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="#FFFFFF">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="&quot;Julian is incredibly punctual and the books are always in pristine condition. A pillar of the community!&quot;"
+                            android:textSize="13sp"
+                            android:textColor="#555555"
+                            android:lineSpacingExtra="3dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="— Sarah K."
+                            android:textSize="12sp"
+                            android:textColor="#9E9E9E" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Review card 2 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="#FFFFFF">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="&quot;Great conversation about art history during the handoff. Highly recommend borrowing from his collection.&quot;"
+                            android:textSize="13sp"
+                            android:textColor="#555555"
+                            android:lineSpacingExtra="3dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="— Marcus T."
+                            android:textSize="12sp"
+                            android:textColor="#9E9E9E" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- BOTÓN FIJO ABAJO: Request Loan                        -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FAFAF7"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="32dp">
+
+        <Button
+            android:id="@+id/btnRequestLoan"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:text="▶  Request Loan"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_request_loan_bg"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+</LinearLayout>

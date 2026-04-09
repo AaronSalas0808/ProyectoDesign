@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <!-- Camera body -->
+    <path
+        android:fillColor="#9C2F1F"
+        android:pathData="M15,13L13.3,15H9C7.9,15 7,15.9 7,17V29C7,30.1 7.9,31 9,31H31C32.1,31 33,30.1 33,29V17C33,15.9 32.1,15 31,15H26.7L25,13H15ZM20,28C17.24,28 15,25.76 15,23C15,20.24 17.24,18 20,18C22.76,18 25,20.24 25,23C25,25.76 22.76,28 20,28ZM20,26.5C21.93,26.5 23.5,24.93 23.5,23C23.5,21.07 21.93,19.5 20,19.5C18.07,19.5 16.5,21.07 16.5,23C16.5,24.93 18.07,26.5 20,26.5Z" />
+    <!-- Plus sign -->
+    <path
+        android:fillColor="#9C2F1F"
+        android:pathData="M27,8L27,11L24,11L24,13L27,13L27,16L29,16L29,13L32,13L32,11L29,11L29,8Z" />
+</vector>

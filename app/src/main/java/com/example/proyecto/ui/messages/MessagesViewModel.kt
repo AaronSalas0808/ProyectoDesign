@@ -1,4 +1,4 @@
-package com.example.proyecto.ui.library
+package com.example.proyecto.ui.community
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

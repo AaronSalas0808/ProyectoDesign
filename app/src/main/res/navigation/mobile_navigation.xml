@@ -9,13 +9,33 @@
         android:id="@+id/navigation_discovery"
         android:name="com.example.proyecto.ui.discovery.DiscoveryFragment"
         android:label="@string/title_discovery"
-        tools:layout="@layout/fragment_discovery" />
+        tools:layout="@layout/fragment_discovery">
+        <action
+            android:id="@+id/action_discovery_to_book_info"
+            app:destination="@id/navigation_book_info" />
+        <action
+            android:id="@+id/action_discovery_to_profile_owner"
+            app:destination="@id/navigation_profile_owner" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_book_info"
+        android:name="com.example.proyecto.ui.discovery.BookInfoFragment"
+        android:label="Book Info"
+        tools:layout="@layout/fragment_book_info">
+        <argument android:name="bookTitle"    app:argType="string" android:defaultValue="" />
+        <argument android:name="bookAuthor"   app:argType="string" android:defaultValue="" />
+        <argument android:name="bookYear"     app:argType="string" android:defaultValue="" />
+        <argument android:name="bookPages"    app:argType="string" android:defaultValue="" />
+        <argument android:name="bookLanguage" app:argType="string" android:defaultValue="" />
+        <argument android:name="ownerName"    app:argType="string" android:defaultValue="" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_library"
-        android:name="com.example.proyecto.ui.library.LibraryFragment"
-        android:label="@string/title_library"
-        tools:layout="@layout/fragment_library" />
+        android:name="com.example.proyecto.ui.community.CommunityFragment"
+        android:label="@string/title_community"
+        tools:layout="@layout/fragment_community" />
 
     <fragment
         android:id="@+id/navigation_add"
@@ -31,7 +51,20 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.proyecto.ui.profile.ProfileFragment"
+        android:name="com.example.proyecto.ui.profile.ProfileUserFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profile_to_add"
+            app:destination="@id/navigation_add" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile_owner"
+        android:name="com.example.proyecto.ui.profile.ProfileFragment"
+        android:label="Owner Profile"
+        tools:layout="@layout/fragment_profile_user">
+        <argument android:name="ownerName"   app:argType="string" android:defaultValue="" />
+        <argument android:name="ownerRating" app:argType="float"  android:defaultValue="0" />
+    </fragment>
 </navigation>

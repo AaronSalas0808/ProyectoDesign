@@ -4,17 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.proyecto.databinding.FragmentProfileBinding
+import androidx.navigation.fragment.findNavController
+import com.example.proyecto.databinding.FragmentProfileUserBinding
 
 class ProfileFragment : Fragment() {
 
-    private var _binding: FragmentProfileBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private var _binding: FragmentProfileUserBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +18,28 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val profileViewModel =
-            ViewModelProvider(this).get(ProfileViewModel::class.java)
+        _binding = FragmentProfileUserBinding.inflate(inflater, container, false)
 
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val args = arguments
+        val ownerName   = args?.getString("ownerName") ?: "Elena Rodriguez"
+        val ownerRating = args?.getFloat("ownerRating") ?: 4.8f
 
-        val textView: TextView = binding.textProfile
-        profileViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        binding.tvProfileName.text = ownerName
+        binding.tvRating.text      = ownerRating.toString()
+
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
         }
-        return root
+
+        binding.btnMessage.setOnClickListener {
+            // TODO: abrir chat con el dueño
+        }
+
+        binding.tvViewAll.setOnClickListener {
+            // TODO: ver todos los libros del dueño
+        }
+
+        return binding.root
     }
 
     override fun onDestroyView() {

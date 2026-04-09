@@ -1,22 +1,441 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_add_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.add.AddFragment">
+    android:background="#FBFAEE">
 
-    <TextView
-        android:id="@+id/text_add"
-        android:layout_width="match_parent"
+    <!-- TOP APP BAR -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_app_bar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingTop="16dp"
+        android:paddingBottom="12dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="#FBFAEE"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="Close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BookLoop"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#9C2F1F"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/btn_close"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_profile_avatar"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/ic_default_avatar"
+            android:contentDescription="Profile"
+            android:background="@drawable/bg_avatar_toolbar"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- SCROLLABLE CONTENT -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/top_app_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/scroll_inner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="32dp">
+
+            <!-- Page Title -->
+            <TextView
+                android:id="@+id/tv_page_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Share a Story"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="#1E1E1E"
+                android:layout_marginTop="6dp" />
+
+            <!-- Page Subtitle -->
+            <TextView
+                android:id="@+id/tv_page_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="List your book in the community lounge and\nlet it find its next reader."
+                android:textSize="13sp"
+                android:textColor="#7A7A6E"
+                android:layout_marginTop="6dp"
+                android:lineSpacingMultiplier="1.4" />
+
+            <!-- BOOK COVER UPLOAD AREA -->
+            <FrameLayout
+                android:id="@+id/cover_upload_container"
+                android:layout_width="match_parent"
+                android:layout_height="290dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_upload_area"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/ic_camera"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:src="@drawable/ic_camera_add"
+                        android:contentDescription="Upload cover" />
+
+                    <TextView
+                        android:id="@+id/tv_upload_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="UPLOAD BOOK COVER"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#9C2F1F"
+                        android:layout_marginTop="12dp"
+                        android:letterSpacing="0.1" />
+
+                    <TextView
+                        android:id="@+id/tv_upload_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PNG, JPG up to 10MB"
+                        android:textSize="12sp"
+                        android:textColor="#A8A89A"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_book_cover_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    android:contentDescription="Book cover preview" />
+
+            </FrameLayout>
+
+            <!-- FORM FIELDS CARD -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_form_fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:strokeColor="#E8E7DB"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Book Title -->
+                    <TextView
+                        android:id="@+id/label_book_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="BOOK TITLE"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#5A5A50"
+                        android:letterSpacing="0.12" />
+
+                    <EditText
+                        android:id="@+id/et_book_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:hint="e.g. The Great Gatsby"
+                        android:textColorHint="#C0BFB3"
+                        android:textSize="14sp"
+                        android:textColor="#1E1E1E"
+                        android:background="@drawable/bg_input_field"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:inputType="textCapSentences"
+                        android:singleLine="true" />
+
+                    <!-- Author -->
+                    <TextView
+                        android:id="@+id/label_author"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="AUTHOR"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#5A5A50"
+                        android:letterSpacing="0.12"
+                        android:layout_marginTop="16dp" />
+
+                    <EditText
+                        android:id="@+id/et_author"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:hint="F. Scott Fitzgerald"
+                        android:textColorHint="#C0BFB3"
+                        android:textSize="14sp"
+                        android:textColor="#1E1E1E"
+                        android:background="@drawable/bg_input_field"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:inputType="textPersonName"
+                        android:singleLine="true" />
+
+                    <!-- Genre -->
+                    <TextView
+                        android:id="@+id/label_genre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="GENRE"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#5A5A50"
+                        android:letterSpacing="0.12"
+                        android:layout_marginTop="16dp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_genre"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@drawable/bg_spinner_field"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        tools:listitem="@android:layout/simple_spinner_item" />
+
+                    <!-- Description -->
+                    <TextView
+                        android:id="@+id/label_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DESCRIPTION"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:textColor="#5A5A50"
+                        android:letterSpacing="0.12"
+                        android:layout_marginTop="16dp" />
+
+                    <EditText
+                        android:id="@+id/et_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="6dp"
+                        android:hint="Tell the community why you loved this book..."
+                        android:textColorHint="#C0BFB3"
+                        android:textSize="14sp"
+                        android:textColor="#1E1E1E"
+                        android:background="@drawable/bg_input_field"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:gravity="top|start"
+                        android:singleLine="false"
+                        android:minLines="4"
+                        android:maxLines="6"
+                        android:scrollbars="vertical" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CONDITION SELECTOR -->
+            <TextView
+                android:id="@+id/label_condition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CONDITION"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="#5A5A50"
+                android:letterSpacing="0.12"
+                android:layout_marginTop="28dp" />
+
+            <LinearLayout
+                android:id="@+id/condition_chips_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <!-- Excellent (default selected) -->
+                <LinearLayout
+                    android:id="@+id/chip_excellent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@drawable/bg_condition_selected"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_excellent_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Excellent"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E1E1E" />
+
+                    <TextView
+                        android:id="@+id/tv_excellent_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LIKE NEW"
+                        android:textSize="9sp"
+                        android:textColor="#4A4A40"
+                        android:letterSpacing="0.08"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <!-- Good -->
+                <LinearLayout
+                    android:id="@+id/chip_good"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@drawable/bg_condition_unselected"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_good_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Good"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E1E1E" />
+
+                    <TextView
+                        android:id="@+id/tv_good_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MINOR WEAR"
+                        android:textSize="9sp"
+                        android:textColor="#6A6A60"
+                        android:letterSpacing="0.08"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <!-- Fair -->
+                <LinearLayout
+                    android:id="@+id/chip_fair"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@drawable/bg_condition_unselected"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tv_fair_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fair"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#1E1E1E" />
+
+                    <TextView
+                        android:id="@+id/tv_fair_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="READABLE"
+                        android:textSize="9sp"
+                        android:textColor="#6A6A60"
+                        android:letterSpacing="0.08"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- LIST MY BOOK BUTTON -->
+            <Button
+                android:id="@+id/btn_list_book"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:text="List My Book"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_button_primary"
+                android:drawableStart="@drawable/ic_book_list"
+                android:drawablePadding="10dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:stateListAnimator="@null" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

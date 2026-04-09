@@ -2,7 +2,23 @@
     <string name="app_name">Proyecto</string>
     <string name="title_discovery">Discovery</string>
     <string name="title_library">Library</string>
+    <string name="title_community">Community</string>
     <string name="title_add">Add</string>
     <string name="title_messages">Messages</string>
     <string name="title_profile">Profile</string>
+    <string name="book_cover_description">Portada del libro</string>
+    <string name="owner_profile_description">Foto de perfil del dueño</string>
+    <string name="view_book_description">Ver detalles del libro</string>
+    <string name="search_hint">Find your next read...</string>
+    <string name="app_name_bookloop">BookLoop</string>
+    <string name="menu_description">Abrir menú</string>
+    <string name="profile_avatar_description">Foto de perfil</string>
+    <string name="community_title">Community Insights</string>
+    <string name="community_subtitle">Share your thoughts and opinions about your favourite books and build a community of fellow book-worns.</string>
+    <string name="new_post_description">Nuevo post</string>
+    <string name="post_image_description">Imagen del post</string>
+    <string name="messages_title">Chat Section</string>
+    <string name="messages_subtitle">Chat with your fellow book-worms</string>
+    <string name="search_conversations_hint">Search conversations...</string>
+    <string name="recent_chats_label">RECENT CHATS</string>
 </resources>
