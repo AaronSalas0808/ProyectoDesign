@@ -2,16 +2,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loginScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8F5EE"
     android:fillViewport="true"
+    android:clipToPadding="false"
+    android:paddingBottom="24dp"
+    android:scrollbars="none"
     tools:context=".ui.login.LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:animateLayoutChanges="true"
         android:paddingTop="32dp"
         android:paddingBottom="24dp">
 
