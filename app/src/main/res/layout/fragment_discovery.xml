@@ -8,9 +8,6 @@
     android:background="#FFFFFF"
     tools:context=".ui.discovery.DiscoveryFragment">
 
-    <!-- ══════════════════════════════════════ -->
-    <!-- HEADER: Logo + Foto de perfil          -->
-    <!-- ══════════════════════════════════════ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,11 +27,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:text="BookLoop"
+            android:layout_marginStart="12dp"
+            android:text="@string/app_name_bookloop"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#A64534" />
+            android:textColor="#C0392B"
+            android:fontFamily="serif" />
 
         <ImageView
             android:id="@+id/ivHeaderProfile"
@@ -44,12 +42,8 @@
             android:background="@drawable/book_card_profile_image_bg"
             android:clipToOutline="true"
             android:contentDescription="@null" />
-
     </LinearLayout>
 
-    <!-- ══════════════════════════════════════ -->
-    <!-- BÚSQUEDA                               -->
-    <!-- ══════════════════════════════════════ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -80,12 +74,8 @@
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:singleLine="true" />
-
     </LinearLayout>
 
-    <!-- ══════════════════════════════════════ -->
-    <!-- CHIPS DE CATEGORÍA                     -->
-    <!-- ══════════════════════════════════════ -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -131,21 +121,19 @@
                 android:text="Romance"
                 android:textSize="13sp"
                 android:textColor="#757575" />
-
         </LinearLayout>
 
     </HorizontalScrollView>
 
-    <!-- ══════════════════════════════════════ -->
-    <!-- LISTA DE BOOK CARDS                    -->
-    <!-- ══════════════════════════════════════ -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBooks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="96dp"
         tools:listitem="@layout/book_card" />
 
 </LinearLayout>
