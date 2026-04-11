@@ -1,6 +1,5 @@
 package com.example.proyecto.ui.community
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,25 +9,31 @@ import kotlinx.coroutines.launch
 
 class CommunityViewModel : ViewModel() {
 
-    private val _posts = MutableLiveData<List<CommunityPost>>()
-    val posts: LiveData<List<CommunityPost>> = _posts
-
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
+    private val _allPosts = MutableLiveData<List<CommunityPost>>(emptyList())
+    private val _filteredPosts = MutableLiveData<List<CommunityPost>>(emptyList())
+    val filteredPosts: LiveData<List<CommunityPost>> = _filteredPosts
 
     init {
         loadPosts()
     }
 
-    fun loadPosts() {
+    private fun loadPosts() {
         viewModelScope.launch {
             try {
-                _posts.value = BookRepository.getCommunityPosts()
-                _error.value = null
+                val posts = BookRepository.getCommunityPosts()
+                _allPosts.value = posts
+                _filteredPosts.value = posts
             } catch (e: Exception) {
-                Log.e("CommunityViewModel", "Error cargando publicaciones", e)
-                _error.value = "${e.javaClass.simpleName}: ${e.message}"
+                _allPosts.value = emptyList()
+                _filteredPosts.value = emptyList()
             }
         }
+    }
+
+    fun filterPosts(tag: String) {
+        val currentPosts = _allPosts.value.orEmpty()
+        _filteredPosts.value =
+            if (tag == "All") currentPosts
+            else currentPosts.filter { it.tag.equals(tag, ignoreCase = true) }
     }
 }

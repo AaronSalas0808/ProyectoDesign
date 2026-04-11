@@ -5,5 +5,6 @@ data class CommunityPost(
     val timestamp: String,
     val content: String,
     val likeCount: Int,
-    val commentCount: Int
+    val commentCount: Int,
+    val tag: String
 )

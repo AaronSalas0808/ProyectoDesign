@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto.R
 
-class CommunityPostAdapter(private val posts: List<CommunityPost>) :
+class CommunityPostAdapter(private var posts: List<CommunityPost>) :
     RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,4 +34,9 @@ class CommunityPostAdapter(private val posts: List<CommunityPost>) :
     }
 
     override fun getItemCount() = posts.size
+
+    fun updatePosts(newPosts: List<CommunityPost>) {
+        posts = newPosts
+        notifyDataSetChanged()
+    }
 }

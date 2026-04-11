@@ -47,9 +47,10 @@ object BookRepository {
             CommunityPost(
                 authorName = dto.name,
                 timestamp = dto.time,
-                content = "[${dto.tag}] ${dto.title}\n\n${dto.body}",
+                content = "${dto.title}\n\n${dto.body}",
                 likeCount = dto.likes,
-                commentCount = dto.comments
+                commentCount = dto.comments,
+                tag = dto.tag
             )
         }
     }
