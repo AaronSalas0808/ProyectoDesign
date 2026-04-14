@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="14dp"
+    android:paddingVertical="12dp"
+    android:background="#FFFFFF">
+
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:src="@drawable/ic_pages"
+        android:tint="#AAAAAA"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@null" />
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_weight="1"
+        android:hint="Message Julian..."
+        android:textColorHint="#BBBBBB"
+        android:textSize="14sp"
+        android:textColor="#1A1A1A"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/bg_search_field"
+        android:inputType="textMultiLine|textCapSentences"
+        android:imeOptions="actionSend"
+        android:maxLines="3" />
+
+    <ImageView
+        android:id="@+id/btnSend"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="10dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_arrow_forward"
+        android:tint="#FFFFFF"
+        android:background="@drawable/bg_send_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@null" />
+
+</LinearLayout>

@@ -15,7 +15,6 @@ object BookRepository {
                 pages = dto.pages.toString(),
                 language = dto.language,
                 ownerName = dto.owner.name,
-                ownerRating = dto.owner.rating.toFloat(),
                 genre = dto.genre,
                 color = dto.color,
                 ownerInitials = dto.owner.initials
@@ -33,7 +32,6 @@ object BookRepository {
             pages = dto.pages.toString(),
             language = dto.language,
             ownerName = dto.owner.name,
-            ownerRating = dto.owner.rating.toFloat(),
             genre = dto.genre,
             color = dto.color,
             synopsis = dto.synopsis,

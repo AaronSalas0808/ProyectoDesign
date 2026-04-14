@@ -7,10 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto.R
 
-class CommunityPostAdapter(private var posts: List<CommunityPost>) :
-    RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {
+class CommunityPostAdapter(
+    private var posts: List<CommunityPost>,
+    private val onAuthorClick: (CommunityPost) -> Unit = {}
+) : RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val ivPostAvatar: android.widget.ImageView = itemView.findViewById(R.id.ivPostAvatar)
         val tvAuthorName: TextView = itemView.findViewById(R.id.tvPostAuthorName)
         val tvTimestamp: TextView = itemView.findViewById(R.id.tvPostTimestamp)
         val tvContent: TextView = itemView.findViewById(R.id.tvPostContent)
@@ -31,6 +34,8 @@ class CommunityPostAdapter(private var posts: List<CommunityPost>) :
         holder.tvContent.text = post.content
         holder.tvLikeCount.text = post.likeCount.toString()
         holder.tvCommentCount.text = post.commentCount.toString()
+        holder.ivPostAvatar.setOnClickListener { onAuthorClick(post) }
+        holder.tvAuthorName.setOnClickListener { onAuthorClick(post) }
     }
 
     override fun getItemCount() = posts.size

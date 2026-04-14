@@ -15,7 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -414,7 +416,7 @@
         android:background="#FAFAF7"
         android:paddingHorizontal="20dp"
         android:paddingTop="10dp"
-        android:paddingBottom="32dp">
+        android:paddingBottom="16dp">
 
         <Button
             android:id="@+id/btnRequestLoan"

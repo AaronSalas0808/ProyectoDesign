@@ -25,7 +25,17 @@ class DiscoveryFragment : Fragment() {
 
         _binding = FragmentDiscoveryBinding.inflate(inflater, container, false)
 
+        binding.ivMenuBurger.setOnClickListener {
+            (requireActivity() as com.example.proyecto.MainActivity).openDrawer()
+        }
+
         binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (!error.isNullOrEmpty()) {
+                android.widget.Toast.makeText(requireContext(), "Error: $error", android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
 
         viewModel.books.observe(viewLifecycleOwner) { books ->
             binding.rvBooks.adapter = BookAdapter(
@@ -44,7 +54,6 @@ class DiscoveryFragment : Fragment() {
                 onOwnerClick = { book ->
                     val bundle = Bundle().apply {
                         putString("ownerName",   book.ownerName)
-                        putFloat("ownerRating",  book.ownerRating)
                     }
                     findNavController().navigate(R.id.action_discovery_to_profile_owner, bundle)
                 }

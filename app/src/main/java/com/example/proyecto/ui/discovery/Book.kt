@@ -8,7 +8,6 @@ data class Book(
     val pages: String,
     val language: String,
     val ownerName: String,
-    val ownerRating: Float,
     val genre: String = "",
     val color: String = "",
     val synopsis: String = "",

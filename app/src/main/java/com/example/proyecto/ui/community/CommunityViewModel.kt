@@ -24,8 +24,7 @@ class CommunityViewModel : ViewModel() {
                 _allPosts.value = posts
                 _filteredPosts.value = posts
             } catch (e: Exception) {
-                _allPosts.value = emptyList()
-                _filteredPosts.value = emptyList()
+                android.util.Log.e("CommunityViewModel", "Error loading posts: ${e.message}", e)
             }
         }
     }

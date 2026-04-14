@@ -105,50 +105,17 @@
                 android:contentDescription="@string/owner_profile_description"
                 android:clipToOutline="true" />
 
-            <!-- Nombre y rating del dueño -->
-            <LinearLayout
+            <!-- Nombre del dueño -->
+            <TextView
+                android:id="@+id/tvOwnerName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp">
-
-                <TextView
-                    android:id="@+id/tvOwnerName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Aaron Salas"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="#1A1A1A" />
-
-                <!-- Rating con estrella -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="1dp">
-
-                    <ImageView
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:src="@drawable/ic_star"
-                        android:tint="#F5A623"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/tvOwnerRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="3dp"
-                        android:text="4.9"
-                        android:textSize="12sp"
-                        android:textColor="#757575" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+                android:layout_marginStart="10dp"
+                android:text="Aaron Salas"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A" />
 
             <!-- Botón circular con flecha → -->
             <ImageButton

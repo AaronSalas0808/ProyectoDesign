@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentBookInfoBinding
 
 class BookInfoFragment : Fragment() {
@@ -34,6 +35,15 @@ class BookInfoFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        val ownerClickListener = View.OnClickListener {
+            val bundle = Bundle().apply {
+                putString("ownerName", args?.getString("ownerName") ?: "")
+            }
+            findNavController().navigate(R.id.action_book_info_to_profile_owner, bundle)
+        }
+        binding.ivOwnerProfile.setOnClickListener(ownerClickListener)
+        binding.tvOwnerName.setOnClickListener(ownerClickListener)
 
         binding.btnRequestLoan.setOnClickListener {
             // TODO: implementar lógica de solicitud de préstamo

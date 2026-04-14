@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentProfileUserBinding
 
 class ProfileFragment : Fragment() {
@@ -22,17 +23,17 @@ class ProfileFragment : Fragment() {
 
         val args = arguments
         val ownerName   = args?.getString("ownerName") ?: "Elena Rodriguez"
-        val ownerRating = args?.getFloat("ownerRating") ?: 4.8f
-
         binding.tvProfileName.text = ownerName
-        binding.tvRating.text      = ownerRating.toString()
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
         binding.btnMessage.setOnClickListener {
-            // TODO: abrir chat con el dueño
+            val bundle = Bundle().apply {
+                putString("ownerName", ownerName)
+            }
+            findNavController().navigate(R.id.action_profile_owner_to_chat, bundle)
         }
 
         binding.tvViewAll.setOnClickListener {

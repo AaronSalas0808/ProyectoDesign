@@ -19,6 +19,11 @@ class MessagesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMessagesBinding.inflate(inflater, container, false)
+
+        binding.ivMenuBurger.setOnClickListener {
+            (requireActivity() as com.example.proyecto.MainActivity).openDrawer()
+        }
+
         return binding.root
     }
 

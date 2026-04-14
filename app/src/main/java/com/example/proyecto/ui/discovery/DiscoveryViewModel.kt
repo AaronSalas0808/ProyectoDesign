@@ -25,7 +25,8 @@ class DiscoveryViewModel : ViewModel() {
                 _books.value = BookRepository.getBooks()
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = "No se pudieron cargar los libros"
+                android.util.Log.e("DiscoveryViewModel", "Error loading books: ${e.message}", e)
+                _error.value = e.message ?: "Error desconocido"
             }
         }
     }

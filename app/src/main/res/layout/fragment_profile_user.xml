@@ -4,13 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAF7">
+    android:background="#FAFAF7"
+    android:clipToPadding="false"
+    android:paddingBottom="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:paddingBottom="0dp">
 
         <!-- ─────────────────────────────────────── -->
         <!-- TOOLBAR: ← BookLoop + perfil            -->
@@ -29,13 +31,6 @@
                 android:layout_height="36dp"
                 android:padding="6dp"
                 android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@null" />
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_book_logo"
                 android:contentDescription="@null" />
 
             <TextView
@@ -92,44 +87,13 @@
                 android:textStyle="bold"
                 android:textColor="#1A1A1A" />
 
-            <!-- Stats: Rating · Loans · Listed -->
+            <!-- Stats: Loans · Listed -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginTop="14dp">
-
-                <!-- Rating -->
-                <LinearLayout
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/tvRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4.8"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="RATING"
-                        android:textSize="10sp"
-                        android:textColor="#9E9E9E"
-                        android:letterSpacing="0.08" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="28dp"
-                    android:background="#E0E0E0" />
 
                 <!-- Loans -->
                 <LinearLayout

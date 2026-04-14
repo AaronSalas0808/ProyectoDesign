@@ -3,7 +3,6 @@ package com.example.proyecto.network
 data class OwnerDto(
     val initials: String,
     val name: String,
-    val rating: Double,
     val maxDays: Int? = null
 )
 

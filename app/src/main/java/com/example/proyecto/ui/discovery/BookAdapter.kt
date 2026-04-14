@@ -27,7 +27,6 @@ class BookAdapter(
             tvBookTitle.text = book.title
             tvBookAuthor.text = book.author
             tvOwnerName.text = book.ownerName
-            tvOwnerRating.text = book.ownerRating.toString()
             btnViewBook.setOnClickListener { onBookClick(book) }
             ivOwnerProfile.setOnClickListener { onOwnerClick(book) }
             tvOwnerName.setOnClickListener { onOwnerClick(book) }

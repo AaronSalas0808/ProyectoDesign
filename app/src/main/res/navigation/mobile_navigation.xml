@@ -29,13 +29,20 @@
         <argument android:name="bookPages"    app:argType="string" android:defaultValue="" />
         <argument android:name="bookLanguage" app:argType="string" android:defaultValue="" />
         <argument android:name="ownerName"    app:argType="string" android:defaultValue="" />
+        <action
+            android:id="@+id/action_book_info_to_profile_owner"
+            app:destination="@id/navigation_profile_owner" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_library"
         android:name="com.example.proyecto.ui.community.CommunityFragment"
         android:label="@string/title_community"
-        tools:layout="@layout/fragment_community" />
+        tools:layout="@layout/fragment_community">
+        <action
+            android:id="@+id/action_community_to_profile_owner"
+            app:destination="@id/navigation_profile_owner" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add"
@@ -65,6 +72,16 @@
         android:label="Owner Profile"
         tools:layout="@layout/fragment_profile_user">
         <argument android:name="ownerName"   app:argType="string" android:defaultValue="" />
-        <argument android:name="ownerRating" app:argType="float"  android:defaultValue="0" />
+        <action
+            android:id="@+id/action_profile_owner_to_chat"
+            app:destination="@id/navigation_chat" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.example.proyecto.ui.messages.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat">
+        <argument android:name="ownerName" app:argType="string" android:defaultValue="" />
     </fragment>
 </navigation>

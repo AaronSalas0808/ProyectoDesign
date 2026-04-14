@@ -1,6 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  burger_menu.xml                                                             ║
+║  Panel del Navigation Drawer de BookLoop (menú hamburger ☰).                ║
+║                                                                              ║
+║  IDs expuestos:                                                              ║
+║    btnCloseDrawer   → ImageButton X para cerrar el drawer                    ║
+║    ivDrawerAvatar   → Foto circular del usuario                              ║
+║    tvDrawerName     → Nombre completo del usuario                            ║
+║    tvDrawerHandle   → @username                                              ║
+║    tvBooksCount     → Texto del chip de libros ("12 Books")                  ║
+║    tvDrawerRating   → Texto del chip de rating ("4.9")                       ║
+║    btnEditProfile   → Botón "Edit Profile"                                   ║
+║    itemSettings     → LinearLayout clickeable "Account Settings"             ║
+║    itemGuidelines   → LinearLayout clickeable "BookLoop Guidelines"          ║
+║    itemSupport      → LinearLayout clickeable "Support"                      ║
+║    itemLogOut       → LinearLayout clickeable "Log Out"                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="310dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="#F2EFE8"
+    android:fillViewport="true"
+    android:scrollbars="none">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="52dp"
+        android:paddingBottom="40dp">
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- FILA: Avatar + botón cerrar X           -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp">
+
+            <ImageView
+                android:id="@+id/ivDrawerAvatar"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_default_avatar"
+                android:background="@drawable/bg_avatar_toolbar"
+                android:clipToOutline="true"
+                android:padding="4dp"
+                android:contentDescription="@string/user_avatar_description" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btnCloseDrawer"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_close"
+                android:tint="#1A1A1A"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/close_drawer_description" />
+
+        </LinearLayout>
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- NOMBRE Y HANDLE                         -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="18dp">
+
+            <TextView
+                android:id="@+id/tvDrawerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Julian Barnes"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"
+                android:letterSpacing="-0.01" />
+
+            <TextView
+                android:id="@+id/tvDrawerHandle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@JULB09"
+                android:textSize="13sp"
+                android:textColor="#888888" />
+
+        </LinearLayout>
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- CHIPS: 12 Books                         -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="24dp">
+
+            <!-- Chip: Libros -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_chip_info"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_pages"
+                    android:tint="#C0392B"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:id="@+id/tvBooksCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="12 Books"
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- BOTÓN: Edit Profile                     -->
+        <!-- ─────────────────────────────────────── -->
+        <Button
+            android:id="@+id/btnEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="24dp"
+            android:text="Edit Profile"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_request_loan_bg"
+            android:stateListAnimator="@null" />
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- LABEL: PREFERENCES & SUPPORT            -->
+        <!-- ─────────────────────────────────────── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="30dp"
+            android:paddingBottom="6dp"
+            android:text="PREFERENCES &amp; SUPPORT"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="#AAAAAA"
+            android:letterSpacing="0.12" />
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- Item: Account Settings                  -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:id="@+id/itemSettings"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_profile"
+                android:tint="#1A1A1A"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Account Settings"
+                android:textSize="15sp"
+                android:textColor="#1A1A1A" />
+
+        </LinearLayout>
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- Item: BookLoop Guidelines               -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:id="@+id/itemGuidelines"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_library"
+                android:tint="#1A1A1A"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="BookLoop Guidelines"
+                android:textSize="15sp"
+                android:textColor="#1A1A1A" />
+
+        </LinearLayout>
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- Item: Support                           -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:id="@+id/itemSupport"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_message"
+                android:tint="#1A1A1A"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Support"
+                android:textSize="15sp"
+                android:textColor="#1A1A1A" />
+
+        </LinearLayout>
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- Divisor antes de Log Out                -->
+        <!-- ─────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            android:background="#E0DDD5" />
+
+        <!-- ─────────────────────────────────────── -->
+        <!-- Item: Log Out (rojo)                    -->
+        <!-- ─────────────────────────────────────── -->
+        <LinearLayout
+            android:id="@+id/itemLogOut"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="24dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_arrow_forward"
+                android:tint="#A64534"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Log Out"
+                android:textSize="15sp"
+                android:textColor="#A64534"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

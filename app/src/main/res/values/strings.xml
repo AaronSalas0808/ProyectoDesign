@@ -21,4 +21,6 @@
     <string name="messages_subtitle">Chat with your fellow book-worms</string>
     <string name="search_conversations_hint">Search conversations...</string>
     <string name="recent_chats_label">RECENT CHATS</string>
+    <string name="user_avatar_description">Foto de perfil del usuario</string>
+    <string name="close_drawer_description">Cerrar menú</string>
 </resources>
