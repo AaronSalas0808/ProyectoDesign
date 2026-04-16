@@ -44,17 +44,8 @@ class CommunityFragment : Fragment() {
             (requireActivity() as com.example.proyecto.MainActivity).openDrawer()
         }
 
-        setupFilters()
 
         return binding.root
-    }
-
-    private fun setupFilters() {
-        binding.chipAll.setOnClickListener { viewModel.filterPosts("All") }
-        binding.chipReviews.setOnClickListener { viewModel.filterPosts("Reviews") }
-        binding.chipRecommendations.setOnClickListener { viewModel.filterPosts("Recommendations") }
-        binding.chipAuthors.setOnClickListener { viewModel.filterPosts("Authors") }
-        binding.chipCommunity.setOnClickListener { viewModel.filterPosts("Community") }
     }
 
     override fun onDestroyView() {
