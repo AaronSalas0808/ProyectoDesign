@@ -1,6 +1,5 @@
 package com.example.proyecto.ui.profile
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.proyecto.MainActivity
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentProfileBinding
-import com.example.proyecto.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -48,8 +47,7 @@ class ProfileUserFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
-            auth.signOut()
-            goToLogin()
+            (requireActivity() as MainActivity).logoutUser()
         }
     }
 
@@ -57,7 +55,7 @@ class ProfileUserFragment : Fragment() {
         val currentUser = auth.currentUser
 
         if (currentUser == null) {
-            goToLogin()
+            (requireActivity() as MainActivity).logoutUser()
             return
         }
 
@@ -65,20 +63,24 @@ class ProfileUserFragment : Fragment() {
             .document(currentUser.uid)
             .get()
             .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val name = document.getString("name").orEmpty()
-                    val username = document.getString("username").orEmpty()
+                val name = document.getString("name").orEmpty()
+                val username = document.getString("username").orEmpty()
 
-                    binding.tvProfileName.text =
-                        if (name.isNotBlank()) name else "Usuario"
-
-                    binding.tvUsername.text =
-                        if (username.isNotBlank()) "@$username"
-                        else currentUser.email ?: "@usuario"
-                } else {
-                    binding.tvProfileName.text = currentUser.email ?: "Usuario"
-                    binding.tvUsername.text = currentUser.email ?: "@usuario"
+                val displayName = when {
+                    name.isNotBlank() -> name
+                    !currentUser.displayName.isNullOrBlank() -> currentUser.displayName!!
+                    !currentUser.email.isNullOrBlank() -> currentUser.email!!
+                    else -> "Usuario"
                 }
+
+                val displayHandle = when {
+                    username.isNotBlank() -> "@$username"
+                    !currentUser.email.isNullOrBlank() -> "@${currentUser.email!!.substringBefore("@")}"
+                    else -> "@usuario"
+                }
+
+                binding.tvProfileName.text = displayName
+                binding.tvUsername.text = displayHandle
             }
             .addOnFailureListener { e ->
                 Toast.makeText(
@@ -87,17 +89,20 @@ class ProfileUserFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                binding.tvProfileName.text = currentUser.email ?: "Usuario"
-                binding.tvUsername.text = currentUser.email ?: "@usuario"
-            }
-    }
+                val fallbackName = when {
+                    !currentUser.displayName.isNullOrBlank() -> currentUser.displayName!!
+                    !currentUser.email.isNullOrBlank() -> currentUser.email!!
+                    else -> "Usuario"
+                }
 
-    private fun goToLogin() {
-        val intent = Intent(requireContext(), LoginActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
-        requireActivity().finish()
+                val fallbackHandle = when {
+                    !currentUser.email.isNullOrBlank() -> "@${currentUser.email!!.substringBefore("@")}"
+                    else -> "@usuario"
+                }
+
+                binding.tvProfileName.text = fallbackName
+                binding.tvUsername.text = fallbackHandle
+            }
     }
 
     override fun onDestroyView() {
