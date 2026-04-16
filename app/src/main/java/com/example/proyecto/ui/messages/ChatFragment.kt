@@ -34,6 +34,12 @@ class ChatFragment : Fragment() {
         binding.tvChatName.text = ownerName
         binding.etMessage.hint  = "Message ${ownerName.split(" ").first()}..."
 
+        val defaultMessage = arguments?.getString("defaultMessage") ?: ""
+        if (defaultMessage.isNotEmpty()) {
+            binding.etMessage.setText(defaultMessage)
+            binding.etMessage.setSelection(defaultMessage.length)
+        }
+
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -58,18 +64,38 @@ class ChatFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        findNavController().currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<Boolean>("bookShared")
+            ?.observe(viewLifecycleOwner) { shared ->
+                if (shared == true) {
+                    messages.add(
+                        ChatMessage("", getCurrentTime(), isSent = true, type = ChatMessage.TYPE_BOOK_SHARED)
+                    )
+                    adapter.notifyItemInserted(messages.size - 1)
+                    binding.rvMessages.scrollToPosition(messages.size - 1)
+                    findNavController().currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.remove<Boolean>("bookShared")
+                }
+            }
+    }
+
     private fun showAttachmentMenu() {
         val sheet = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.bottom_sheet_attachment, null)
 
         view.findViewById<View>(R.id.optionShareBook).setOnClickListener {
             sheet.dismiss()
-            // TODO: implementar compartir libro
+            findNavController().navigate(R.id.action_chat_to_shared)
         }
 
         view.findViewById<View>(R.id.optionDeliverBook).setOnClickListener {
             sheet.dismiss()
-            // TODO: implementar entregar libro
+            findNavController().navigate(R.id.action_chat_to_return)
         }
 
         sheet.setContentView(view)

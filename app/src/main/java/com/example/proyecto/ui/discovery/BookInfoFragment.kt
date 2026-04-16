@@ -46,7 +46,13 @@ class BookInfoFragment : Fragment() {
         binding.tvOwnerName.setOnClickListener(ownerClickListener)
 
         binding.btnRequestLoan.setOnClickListener {
-            // TODO: implementar lógica de solicitud de préstamo
+            val bookTitle = args?.getString("bookTitle") ?: ""
+            val ownerName = args?.getString("ownerName") ?: ""
+            val bundle = Bundle().apply {
+                putString("ownerName", ownerName)
+                putString("defaultMessage", "Hola estoy interesado en poder leer $bookTitle ¿se encuentra disponible?")
+            }
+            findNavController().navigate(R.id.action_book_info_to_chat, bundle)
         }
 
         return binding.root

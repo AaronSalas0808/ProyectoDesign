@@ -40,9 +40,8 @@
             android:id="@+id/ivHeaderProfile"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/book_card_profile_image_bg"
-            android:clipToOutline="true"
+            android:src="@drawable/ic_book_logo"
+            android:scaleType="fitCenter"
             android:contentDescription="@null" />
     </LinearLayout>
 
@@ -87,43 +86,11 @@
         android:layout_marginBottom="8dp">
 
         <LinearLayout
+            android:id="@+id/chipContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/chipDiscovery"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:text="Discovery"
-                android:textSize="13sp"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:paddingHorizontal="20dp"
-                android:background="@drawable/bg_chip_selected" />
-
-            <TextView
-                android:id="@+id/chipFollows"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:layout_marginStart="16dp"
-                android:text="Follows"
-                android:textSize="13sp"
-                android:textColor="#757575" />
-
-            <TextView
-                android:id="@+id/chipRomance"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:gravity="center"
-                android:layout_marginStart="16dp"
-                android:text="Romance"
-                android:textSize="13sp"
-                android:textColor="#757575" />
-        </LinearLayout>
+            android:gravity="center_vertical" />
 
     </HorizontalScrollView>
 

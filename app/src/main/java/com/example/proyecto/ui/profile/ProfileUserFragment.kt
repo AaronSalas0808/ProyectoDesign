@@ -46,9 +46,6 @@ class ProfileUserFragment : Fragment() {
             // TODO: ver todos los libros disponibles
         }
 
-        binding.btnLogout.setOnClickListener {
-            (requireActivity() as MainActivity).logoutUser()
-        }
     }
 
     private fun loadUserProfile() {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="book_genres">
+        <item>Novela</item>
+        <item>Cuento</item>
+        <item>Fantasía</item>
+        <item>Ciencia ficción</item>
+        <item>Terror</item>
+        <item>Misterio</item>
+        <item>Suspenso / Thriller</item>
+        <item>Aventura</item>
+        <item>Romance</item>
+        <item>Distopía</item>
+        <item>Realismo mágico</item>
+        <item>Ficción histórica</item>
+        <item>Ficción contemporánea</item>
+        <item>Fantasía épica</item>
+        <item>Fantasía urbana</item>
+        <item>Cyberpunk</item>
+        <item>Steampunk</item>
+    </string-array>
+</resources>

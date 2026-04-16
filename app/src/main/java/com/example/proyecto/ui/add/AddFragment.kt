@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -27,6 +28,17 @@ class AddFragment : Fragment() {
         binding.btnClose.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        val genres = resources.getStringArray(R.array.book_genres).toMutableList()
+        genres.add(0, "Selecciona un género")
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            genres
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.spinnerGenre.adapter = adapter
 
         return binding.root
     }

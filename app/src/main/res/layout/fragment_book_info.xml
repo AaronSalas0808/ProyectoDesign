@@ -403,32 +403,24 @@
 
             </LinearLayout>
 
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <!-- ══════════════════════════════════════════════════════ -->
-    <!-- BOTÓN FIJO ABAJO: Request Loan                        -->
-    <!-- ══════════════════════════════════════════════════════ -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FAFAF7"
-        android:paddingHorizontal="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="16dp">
-
+        <!-- Botón Request Loan al final del scroll -->
         <Button
             android:id="@+id/btnRequestLoan"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp"
+            android:paddingHorizontal="28dp"
             android:text="▶  Request Loan"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_request_loan_bg"
             android:stateListAnimator="@null" />
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

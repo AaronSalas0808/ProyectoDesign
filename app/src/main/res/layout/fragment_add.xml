@@ -49,10 +49,9 @@
             android:id="@+id/iv_profile_avatar"
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:src="@drawable/ic_default_avatar"
-            android:contentDescription="Profile"
-            android:background="@drawable/bg_avatar_toolbar"
-            android:scaleType="centerCrop"
+            android:src="@drawable/ic_app_logo"
+            android:contentDescription="Logo"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

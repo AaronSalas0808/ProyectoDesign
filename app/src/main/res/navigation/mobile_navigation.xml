@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_book_info_to_profile_owner"
             app:destination="@id/navigation_profile_owner" />
+        <action
+            android:id="@+id/action_book_info_to_chat"
+            app:destination="@id/navigation_chat" />
     </fragment>
 
     <fragment
@@ -82,6 +85,25 @@
         android:name="com.example.proyecto.ui.messages.ChatFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat">
-        <argument android:name="ownerName" app:argType="string" android:defaultValue="" />
+        <argument android:name="ownerName"      app:argType="string" android:defaultValue="" />
+        <argument android:name="defaultMessage" app:argType="string" android:defaultValue="" />
+        <action
+            android:id="@+id/action_chat_to_shared"
+            app:destination="@id/navigation_shared" />
+        <action
+            android:id="@+id/action_chat_to_return"
+            app:destination="@id/navigation_return" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_shared"
+        android:name="com.example.proyecto.ui.messages.SharedFragment"
+        android:label="Confirm Handoff"
+        tools:layout="@layout/fragment_shared" />
+
+    <fragment
+        android:id="@+id/navigation_return"
+        android:name="com.example.proyecto.ui.messages.ReturnFragment"
+        android:label="Confirm Return"
+        tools:layout="@layout/fragment_return" />
 </navigation>
