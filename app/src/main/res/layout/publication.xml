@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_publication_dialog"
+    android:padding="24dp">
+
+    <!-- Título + botón cerrar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nueva publicación"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A"
+            android:fontFamily="serif" />
+
+        <ImageButton
+            android:id="@+id/btnCloseDialog"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_close"
+            android:tint="#1A1A1A"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/close_description" />
+
+    </LinearLayout>
+
+    <!-- Label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¿Qué quieres compartir?"
+        android:textSize="13sp"
+        android:textColor="#7A7A6E"
+        android:fontFamily="serif"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Campo de texto -->
+    <EditText
+        android:id="@+id/etPublicationText"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:hint="Escribe algo sobre tu libro..."
+        android:textColorHint="#B8B4A0"
+        android:textSize="14sp"
+        android:textColor="#1A1A1A"
+        android:fontFamily="serif"
+        android:background="@drawable/bg_input_field"
+        android:padding="14dp"
+        android:gravity="top|start"
+        android:inputType="textMultiLine|textCapSentences"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Label imagen -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Imagen (opcional)"
+        android:textSize="13sp"
+        android:textColor="#7A7A6E"
+        android:fontFamily="serif"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Zona upload -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_marginBottom="24dp">
+
+        <LinearLayout
+            android:id="@+id/llImageUpload"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_upload_area"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_camera_add"
+                android:tint="#B8B4A0"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Toca para subir imagen"
+                android:textSize="13sp"
+                android:fontFamily="serif"
+                android:textColor="#B8B4A0" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivImagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_upload_area"
+            android:clipToOutline="true"
+            android:visibility="gone"
+            android:contentDescription="@null" />
+
+    </FrameLayout>
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:text="Cancelar"
+            android:textSize="14sp"
+            android:fontFamily="serif"
+            android:textColor="#7A2515"
+            android:background="@drawable/btn_cancel_publication"
+            android:stateListAnimator="@null" />
+
+        <Button
+            android:id="@+id/btnPublish"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:text="Publicar"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="serif"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -44,6 +44,9 @@ class CommunityFragment : Fragment() {
             (requireActivity() as com.example.proyecto.MainActivity).openDrawer()
         }
 
+        binding.fabNewPost.setOnClickListener {
+            CreatePublicationDialog().show(parentFragmentManager, "create_post")
+        }
 
         return binding.root
     }

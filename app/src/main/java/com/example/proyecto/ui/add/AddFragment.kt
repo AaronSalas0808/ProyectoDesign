@@ -1,20 +1,40 @@
 package com.example.proyecto.ui.add
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentAddBinding
+import java.io.File
 
 class AddFragment : Fragment() {
 
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
+
+    private var coverPhotoUri: Uri? = null
+
+    private val takeCoverPhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            binding.ivBookCoverPreview.setImageURI(coverPhotoUri)
+            binding.ivBookCoverPreview.visibility = View.VISIBLE
+        }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) launchCamera()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,6 +49,10 @@ class AddFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.coverUploadContainer.setOnClickListener {
+            checkCameraPermissionAndLaunch()
+        }
+
         val genres = resources.getStringArray(R.array.book_genres).toMutableList()
         genres.add(0, "Selecciona un género")
         val adapter = ArrayAdapter(
@@ -41,6 +65,25 @@ class AddFragment : Fragment() {
         binding.spinnerGenre.adapter = adapter
 
         return binding.root
+    }
+
+    private fun checkCameraPermissionAndLaunch() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED) {
+            launchCamera()
+        } else {
+            requestCameraPermission.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun launchCamera() {
+        coverPhotoUri = createTempPhotoUri()
+        takeCoverPhoto.launch(coverPhotoUri)
+    }
+
+    private fun createTempPhotoUri(): Uri {
+        val file = File.createTempFile("photo_", ".jpg", requireContext().cacheDir)
+        return FileProvider.getUriForFile(requireContext(), "com.example.proyecto.fileprovider", file)
     }
 
     override fun onDestroyView() {

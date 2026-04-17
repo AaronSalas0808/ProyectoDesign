@@ -151,123 +151,16 @@
         <!-- ─────────────────────────────────────── -->
         <Button
             android:id="@+id/btnEditProfile"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginHorizontal="24dp"
+            android:paddingHorizontal="24dp"
             android:text="Edit Profile"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_request_loan_bg"
             android:stateListAnimator="@null" />
-
-        <!-- ─────────────────────────────────────── -->
-        <!-- LABEL: PREFERENCES & SUPPORT            -->
-        <!-- ─────────────────────────────────────── -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="24dp"
-            android:paddingTop="30dp"
-            android:paddingBottom="6dp"
-            android:text="PREFERENCES &amp; SUPPORT"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:textColor="#AAAAAA"
-            android:letterSpacing="0.12" />
-
-        <!-- ─────────────────────────────────────── -->
-        <!-- Item: Account Settings                  -->
-        <!-- ─────────────────────────────────────── -->
-        <LinearLayout
-            android:id="@+id/itemSettings"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="24dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_profile"
-                android:tint="#1A1A1A"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Account Settings"
-                android:textSize="15sp"
-                android:textColor="#1A1A1A" />
-
-        </LinearLayout>
-
-        <!-- ─────────────────────────────────────── -->
-        <!-- Item: BookLoop Guidelines               -->
-        <!-- ─────────────────────────────────────── -->
-        <LinearLayout
-            android:id="@+id/itemGuidelines"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="24dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_library"
-                android:tint="#1A1A1A"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="BookLoop Guidelines"
-                android:textSize="15sp"
-                android:textColor="#1A1A1A" />
-
-        </LinearLayout>
-
-        <!-- ─────────────────────────────────────── -->
-        <!-- Item: Support                           -->
-        <!-- ─────────────────────────────────────── -->
-        <LinearLayout
-            android:id="@+id/itemSupport"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="24dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_message"
-                android:tint="#1A1A1A"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Support"
-                android:textSize="15sp"
-                android:textColor="#1A1A1A" />
-
-        </LinearLayout>
 
         <!-- ─────────────────────────────────────── -->
         <!-- Divisor antes de Log Out                -->

@@ -46,7 +46,7 @@
             <ImageView
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@drawable/ic_app_logo"
+                android:src="@drawable/ic_book_logo"
                 android:scaleType="fitCenter"
                 android:contentDescription="@null" />
 

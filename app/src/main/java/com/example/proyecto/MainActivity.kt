@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -92,7 +93,12 @@ class MainActivity : AppCompatActivity() {
 
         // Logout desde el menú
         itemLogOut?.setOnClickListener {
-            logoutUser()
+            AlertDialog.Builder(this)
+                .setTitle("Cerrar sesión")
+                .setMessage("¿Estás seguro que deseas cerrar sesión?")
+                .setPositiveButton("Cerrar sesión") { _, _ -> logoutUser() }
+                .setNegativeButton("Cancelar", null)
+                .show()
         }
     }
 

@@ -38,6 +38,10 @@ class ProfileUserFragment : Fragment() {
     }
 
     private fun setupClicks() {
+        binding.ivBurgerMenu.setOnClickListener {
+            (requireActivity() as MainActivity).openDrawer()
+        }
+
         binding.btnAddBook.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_add)
         }
@@ -45,7 +49,6 @@ class ProfileUserFragment : Fragment() {
         binding.tvViewAll.setOnClickListener {
             // TODO: ver todos los libros disponibles
         }
-
     }
 
     private fun loadUserProfile() {
