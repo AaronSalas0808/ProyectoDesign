@@ -64,8 +64,22 @@ class CommunityViewModel : ViewModel() {
 
     private fun applyFilter() {
         val currentPosts = _allPosts.value.orEmpty()
-        _filteredPosts.value =
-            if (currentTag == "All") currentPosts
+        val filtered = if (currentTag == "All") currentPosts
             else currentPosts.filter { it.tag.equals(currentTag, ignoreCase = true) }
+        _filteredPosts.value = filtered.sortedBy { parseRelativeTime(it.timestamp) }
+    }
+
+    private fun parseRelativeTime(time: String): Long {
+        val lower = time.lowercase().trim()
+        val number = Regex("\\d+").find(lower)?.value?.toLongOrNull() ?: 1L
+        return when {
+            Regex("\\d+\\s*m(in|inuto|inute)?\\b").containsMatchIn(lower) -> number * 60
+            Regex("\\d+\\s*h(r|our|ora)?\\b").containsMatchIn(lower) -> number * 3600
+            Regex("\\d+\\s*d(ay|ía|ia)?\\b").containsMatchIn(lower) -> number * 86400
+            Regex("\\d+\\s*w(k|eek|semana)?\\b").containsMatchIn(lower) -> number * 604800
+            Regex("\\d+\\s*mo(nth|s)?\\b").containsMatchIn(lower) || "mes" in lower -> number * 2592000
+            Regex("\\d+\\s*y(r|ear|año)?\\b").containsMatchIn(lower) || "año" in lower -> number * 31536000
+            else -> 0L
+        }
     }
 }

@@ -225,102 +225,15 @@
 
         </LinearLayout>
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOwnerBooks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:clipToPadding="false">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- Libro 1 -->
-                <LinearLayout
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="14dp">
-
-                    <ImageView
-                        android:id="@+id/ivLoanBook1"
-                        android:layout_width="110dp"
-                        android:layout_height="158dp"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/bg_loan_book_cover"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/tvLoanBook1Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="The Secret"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A"
-                        android:maxLines="2"
-                        android:ellipsize="end" />
-
-                    <TextView
-                        android:id="@+id/tvLoanBook1Author"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Rhonda Byrne"
-                        android:textSize="12sp"
-                        android:textColor="#9E9E9E"
-                        android:maxLines="1"
-                        android:ellipsize="end" />
-
-                </LinearLayout>
-
-                <!-- Libro 2 -->
-                <LinearLayout
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="14dp">
-
-                    <ImageView
-                        android:id="@+id/ivLoanBook2"
-                        android:layout_width="110dp"
-                        android:layout_height="158dp"
-                        android:scaleType="centerCrop"
-                        android:background="#3A3A4A"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/tvLoanBook2Title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="The Handmaid's Tale"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A"
-                        android:maxLines="2"
-                        android:ellipsize="end" />
-
-                    <TextView
-                        android:id="@+id/tvLoanBook2Author"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Margaret Atwood"
-                        android:textSize="12sp"
-                        android:textColor="#9E9E9E"
-                        android:maxLines="1"
-                        android:ellipsize="end" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
+            android:clipToPadding="false"
+            android:scrollbars="none"
+            android:overScrollMode="never" />
 
         <!-- Divisor -->
         <View
@@ -387,17 +300,6 @@
                             android:textStyle="bold"
                             android:textColor="#A64534" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                        </LinearLayout>
-
                     </LinearLayout>
 
                     <TextView
@@ -451,17 +353,6 @@
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="#A64534" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_star" android:contentDescription="@null" android:layout_marginStart="2dp" />
-                        </LinearLayout>
 
                     </LinearLayout>
 

@@ -24,6 +24,7 @@ class AddFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var coverPhotoUri: Uri? = null
+    private var selectedCondition: String = "Excellent"
 
     private val takeCoverPhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
@@ -53,6 +54,8 @@ class AddFragment : Fragment() {
             checkCameraPermissionAndLaunch()
         }
 
+        setupConditionChips()
+
         val genres = resources.getStringArray(R.array.book_genres).toMutableList()
         genres.add(0, "Selecciona un género")
         val adapter = ArrayAdapter(
@@ -65,6 +68,23 @@ class AddFragment : Fragment() {
         binding.spinnerGenre.adapter = adapter
 
         return binding.root
+    }
+
+    private fun setupConditionChips() {
+        val chips = listOf(
+            binding.chipExcellent to "Excellent",
+            binding.chipGood      to "Good",
+            binding.chipFair      to "Fair"
+        )
+        chips.forEach { (chip, condition) ->
+            chip.setOnClickListener {
+                selectedCondition = condition
+                chips.forEach { (c, _) ->
+                    c.setBackgroundResource(R.drawable.bg_condition_unselected)
+                }
+                chip.setBackgroundResource(R.drawable.bg_condition_selected)
+            }
+        }
     }
 
     private fun checkCameraPermissionAndLaunch() {

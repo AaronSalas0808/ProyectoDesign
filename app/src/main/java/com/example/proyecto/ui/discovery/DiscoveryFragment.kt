@@ -2,6 +2,8 @@ package com.example.proyecto.ui.discovery
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -24,6 +26,7 @@ class DiscoveryFragment : Fragment() {
 
     private var allBooks: List<Book> = emptyList()
     private var selectedGenre: String = "Todos"
+    private var searchQuery: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +42,15 @@ class DiscoveryFragment : Fragment() {
         }
 
         binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                searchQuery = s?.toString() ?: ""
+                applyFilter()
+            }
+        })
 
         setupGenreChips()
 
@@ -105,8 +117,9 @@ class DiscoveryFragment : Fragment() {
     }
 
     private fun applyFilter() {
-        val filtered = if (selectedGenre == "Todos") allBooks
-        else allBooks.filter { it.genre.equals(selectedGenre, ignoreCase = true) }
+        val filtered = allBooks
+            .filter { selectedGenre == "Todos" || it.genre.equals(selectedGenre, ignoreCase = true) }
+            .filter { searchQuery.isBlank() || it.title.contains(searchQuery, ignoreCase = true) || it.author.contains(searchQuery, ignoreCase = true) }
 
         binding.rvBooks.adapter = BookAdapter(
             books = filtered,

@@ -57,7 +57,11 @@
         android:id="@+id/navigation_messages"
         android:name="com.example.proyecto.ui.messages.MessagesFragment"
         android:label="@string/title_messages"
-        tools:layout="@layout/fragment_messages" />
+        tools:layout="@layout/fragment_messages">
+        <action
+            android:id="@+id/action_messages_to_chat"
+            app:destination="@id/navigation_chat" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -78,6 +82,9 @@
         <action
             android:id="@+id/action_profile_owner_to_chat"
             app:destination="@id/navigation_chat" />
+        <action
+            android:id="@+id/action_profile_owner_to_book_info"
+            app:destination="@id/navigation_book_info" />
     </fragment>
 
     <fragment
@@ -85,8 +92,9 @@
         android:name="com.example.proyecto.ui.messages.ChatFragment"
         android:label="Chat"
         tools:layout="@layout/fragment_chat">
-        <argument android:name="ownerName"      app:argType="string" android:defaultValue="" />
-        <argument android:name="defaultMessage" app:argType="string" android:defaultValue="" />
+        <argument android:name="ownerName"       app:argType="string"  android:defaultValue="" />
+        <argument android:name="defaultMessage"  app:argType="string"  android:defaultValue="" />
+        <argument android:name="conversationId"  app:argType="integer" android:defaultValue="-1" />
         <action
             android:id="@+id/action_chat_to_shared"
             app:destination="@id/navigation_shared" />
@@ -94,6 +102,12 @@
             android:id="@+id/action_chat_to_return"
             app:destination="@id/navigation_return" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_profile"
+        android:name="com.example.proyecto.ui.profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile" />
 
     <fragment
         android:id="@+id/navigation_shared"

@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var tvDrawerHandle: TextView? = null
     private var itemLogOut: View? = null
     private var btnCloseDrawer: View? = null
+    private var btnEditProfile: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         tvDrawerHandle = drawer.findViewById(R.id.tvDrawerHandle)
         itemLogOut = drawer.findViewById(R.id.itemLogOut)
         btnCloseDrawer = drawer.findViewById(R.id.btnCloseDrawer)
+        btnEditProfile = drawer.findViewById(R.id.btnEditProfile)
 
         // Deshabilita swipe para abrir
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -89,6 +91,12 @@ class MainActivity : AppCompatActivity() {
         // Cerrar con la X
         btnCloseDrawer?.setOnClickListener {
             drawer.closeDrawer(GravityCompat.START)
+        }
+
+        btnEditProfile?.setOnClickListener {
+            drawer.closeDrawer(GravityCompat.START)
+            findNavController(R.id.nav_host_fragment_activity_main)
+                .navigate(R.id.navigation_edit_profile)
         }
 
         // Logout desde el menú
