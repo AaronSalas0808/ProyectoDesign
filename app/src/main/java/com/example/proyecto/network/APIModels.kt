@@ -81,3 +81,30 @@ data class BasicActionResponseDto(
     val message: String,
     val status: String
 )
+
+data class ConversationItemDto(
+    val id: Int,
+    val initials: String,
+    val name: String,
+    val preview: String,
+    val time: String,
+    val unread: Boolean
+)
+
+data class ConversationsResponseDto(
+    val data: List<ConversationItemDto>
+)
+
+data class ConversationMessageDto(
+    val sender: String,
+    val text: String,
+    val timestamp: String
+)
+
+data class ConversationMessagesResponseDto(
+    val data: List<ConversationMessageDto>
+)
+
+data class SendConversationMessageRequestDto(
+    val text: String
+)

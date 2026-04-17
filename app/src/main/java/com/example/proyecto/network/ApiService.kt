@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.Response
 
 interface ApiService {
 
@@ -29,4 +30,18 @@ interface ApiService {
 
     @GET("community/posts")
     suspend fun getCommunityPosts(): CommunityPostsResponseDto
+
+    @GET("conversations")
+    suspend fun getConversations(): ConversationsResponseDto
+
+    @GET("conversations/{id}/messages")
+    suspend fun getConversationMessages(
+        @Path("id") id: Int
+    ): ConversationMessagesResponseDto
+
+    @POST("conversations/{id}/messages")
+    suspend fun postConversationMessage(
+        @Path("id") id: Int,
+        @Body body: SendConversationMessageRequestDto
+    ): Response<Unit>
 }

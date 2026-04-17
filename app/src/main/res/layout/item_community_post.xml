@@ -126,6 +126,7 @@
 
             <!-- Burbuja de comentario + contador -->
 
+
             <TextView
                 android:id="@+id/tvLikeCount"
                 android:layout_width="wrap_content"
@@ -133,14 +134,20 @@
                 android:layout_marginStart="5dp"
                 android:text="24"
                 android:textColor="#888888"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/ivCommentIcon"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginStart="18dp"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_comment" />
+                android:src="@drawable/ic_comment"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
 
             <TextView
                 android:id="@+id/tvCommentCount"
@@ -149,8 +156,9 @@
                 android:layout_marginStart="5dp"
                 android:text="8"
                 android:textColor="#888888"
-                android:textSize="13sp" />
-
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
 
     </LinearLayout>

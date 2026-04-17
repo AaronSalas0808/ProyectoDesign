@@ -114,6 +114,9 @@
                     android:background="@drawable/bg_profile_photo"
                     android:contentDescription="Profile photo"
                     android:padding="24dp"
+                    android:scaleType="centerCrop"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:src="@drawable/ic_camera_simple" />
 
                 <TextView

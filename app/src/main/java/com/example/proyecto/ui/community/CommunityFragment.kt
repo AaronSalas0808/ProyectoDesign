@@ -1,5 +1,6 @@
 package com.example.proyecto.ui.community
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,12 +27,21 @@ class CommunityFragment : Fragment() {
     ): View {
         _binding = FragmentCommunityBinding.inflate(inflater, container, false)
 
-        adapter = CommunityPostAdapter(emptyList()) { post ->
-            val bundle = android.os.Bundle().apply {
-                putString("ownerName", post.authorName)
+        adapter = CommunityPostAdapter(
+            posts = emptyList(),
+            onAuthorClick = { post ->
+                val bundle = Bundle().apply {
+                    putString("ownerName", post.authorName)
+                }
+                findNavController().navigate(R.id.action_community_to_profile_owner, bundle)
+            },
+            onLikeClick = { post ->
+                viewModel.toggleLike(post)
+            },
+            onCommentClick = { post ->
+                showCommentsDialog(post)
             }
-            findNavController().navigate(R.id.action_community_to_profile_owner, bundle)
-        }
+        )
 
         binding.rvCommunityPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvCommunityPosts.adapter = adapter
@@ -49,6 +59,20 @@ class CommunityFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun showCommentsDialog(post: CommunityPost) {
+        val message = if (post.comments.isEmpty()) {
+            "Este post todavía no tiene comentarios."
+        } else {
+            post.comments.joinToString(separator = "\n\n")
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Comentarios de ${post.authorName}")
+            .setMessage(message)
+            .setPositiveButton("Cerrar", null)
+            .show()
     }
 
     override fun onDestroyView() {

@@ -5,13 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentChatBinding
+import com.example.proyecto.network.BookRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.launch
 
 class ChatFragment : Fragment() {
 
@@ -20,6 +24,16 @@ class ChatFragment : Fragment() {
 
     private val messages = mutableListOf<ChatMessage>()
     private lateinit var adapter: ChatAdapter
+
+    private var conversationId: Int = -1
+    private var ownerName: String = "Chat"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        conversationId = arguments?.getInt("conversationId", -1) ?: -1
+        ownerName = arguments?.getString("ownerName") ?: "Chat"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,18 +44,11 @@ class ChatFragment : Fragment() {
 
         requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
 
-        val ownerName = arguments?.getString("ownerName") ?: "Chat"
         binding.tvChatName.text = ownerName
-        binding.etMessage.hint  = "Message ${ownerName.split(" ").first()}..."
-
-        val defaultMessage = arguments?.getString("defaultMessage") ?: ""
-        if (defaultMessage.isNotEmpty()) {
-            binding.etMessage.setText(defaultMessage)
-            binding.etMessage.setSelection(defaultMessage.length)
-        }
+        binding.etMessage.hint = "Message ${ownerName.split(" ").first()}..."
 
         binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
+            goToMessages()
         }
 
         adapter = ChatAdapter(messages)
@@ -51,15 +58,18 @@ class ChatFragment : Fragment() {
         binding.rvMessages.adapter = adapter
 
         binding.btnAttachment.setOnClickListener { showAttachmentMenu() }
-
         binding.btnSend.setOnClickListener { sendMessage() }
 
         binding.etMessage.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 sendMessage()
                 true
-            } else false
+            } else {
+                false
+            }
         }
+
+        loadMessages()
 
         return binding.root
     }
@@ -67,21 +77,48 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        findNavController().currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Boolean>("bookShared")
-            ?.observe(viewLifecycleOwner) { shared ->
-                if (shared == true) {
-                    messages.add(
-                        ChatMessage("", getCurrentTime(), isSent = true, type = ChatMessage.TYPE_BOOK_SHARED)
-                    )
-                    adapter.notifyItemInserted(messages.size - 1)
-                    binding.rvMessages.scrollToPosition(messages.size - 1)
-                    findNavController().currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<Boolean>("bookShared")
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    goToMessages()
                 }
             }
+        )
+    }
+
+    private fun goToMessages() {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_activity_main, MessagesFragment())
+            .commit()
+
+        requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
+    }
+
+    private fun loadMessages() {
+        if (conversationId == -1) {
+            Toast.makeText(requireContext(), "No se recibió el id de la conversación", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val apiMessages = BookRepository.getConversationMessages(conversationId)
+                messages.clear()
+                messages.addAll(apiMessages)
+                adapter.notifyDataSetChanged()
+
+                if (messages.isNotEmpty()) {
+                    binding.rvMessages.scrollToPosition(messages.size - 1)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    e.message ?: "Error cargando mensajes",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun showAttachmentMenu() {
@@ -90,12 +127,12 @@ class ChatFragment : Fragment() {
 
         view.findViewById<View>(R.id.optionShareBook).setOnClickListener {
             sheet.dismiss()
-            findNavController().navigate(R.id.action_chat_to_shared)
+            Toast.makeText(requireContext(), "Esta opción sigue igual por ahora", Toast.LENGTH_SHORT).show()
         }
 
         view.findViewById<View>(R.id.optionDeliverBook).setOnClickListener {
             sheet.dismiss()
-            findNavController().navigate(R.id.action_chat_to_return)
+            Toast.makeText(requireContext(), "Esta opción sigue igual por ahora", Toast.LENGTH_SHORT).show()
         }
 
         sheet.setContentView(view)
@@ -105,25 +142,29 @@ class ChatFragment : Fragment() {
     private fun sendMessage() {
         val text = binding.etMessage.text.toString().trim()
         if (text.isEmpty()) return
+        if (conversationId == -1) return
 
-        val time = getCurrentTime()
-        messages.add(ChatMessage(text, time, isSent = true))
-        adapter.notifyItemInserted(messages.size - 1)
-        binding.rvMessages.scrollToPosition(messages.size - 1)
-        binding.etMessage.text.clear()
-    }
+        binding.btnSend.isEnabled = false
 
-    private fun getCurrentTime(): String {
-        val calendar = java.util.Calendar.getInstance()
-        val hour   = calendar.get(java.util.Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(java.util.Calendar.MINUTE)
-        val amPm   = if (hour < 12) "AM" else "PM"
-        val hour12 = when {
-            hour == 0  -> 12
-            hour > 12  -> hour - 12
-            else       -> hour
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val sent = BookRepository.postConversationMessage(conversationId, text)
+                if (sent) {
+                    binding.etMessage.text.clear()
+                    loadMessages()
+                } else {
+                    Toast.makeText(requireContext(), "No se pudo enviar el mensaje", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    e.message ?: "Error enviando mensaje",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                binding.btnSend.isEnabled = true
+            }
         }
-        return "$hour12:${minute.toString().padStart(2, '0')} $amPm"
     }
 
     override fun onDestroyView() {

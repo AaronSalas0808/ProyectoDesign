@@ -6,5 +6,7 @@ data class CommunityPost(
     val content: String,
     val likeCount: Int,
     val commentCount: Int,
-    val tag: String
+    val tag: String,
+    val comments: List<String> = emptyList(),
+    val isLiked: Boolean = false
 )
