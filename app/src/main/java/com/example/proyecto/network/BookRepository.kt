@@ -22,7 +22,10 @@ object BookRepository {
                 ownerName = dto.owner.name,
                 genre = dto.genre,
                 color = dto.color,
-                ownerInitials = dto.owner.initials
+                ownerInitials = dto.owner.initials,
+                images = dto.images ?: emptyList(),
+                coverUrl = dto.coverUrl,
+                isbn = dto.isbn
             )
         }
     }
@@ -41,7 +44,10 @@ object BookRepository {
             color = dto.color,
             synopsis = dto.synopsis,
             ownerInitials = dto.owner.initials,
-            maxDays = dto.owner.maxDays
+            maxDays = dto.owner.maxDays,
+            images = dto.images ?: emptyList(),
+            coverUrl = dto.coverUrl,
+            isbn = dto.isbn
         )
     }
 

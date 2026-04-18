@@ -3,8 +3,9 @@ package com.example.proyecto.ui.discovery
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.proyecto.R
 import com.example.proyecto.databinding.BookCardBinding
-import android.view.View
 
 class BookAdapter(
     private val books: List<Book>,
@@ -24,19 +25,26 @@ class BookAdapter(
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = books[position]
+
         with(holder.binding) {
             tvBookTitle.text = book.title
             tvBookAuthor.text = book.author
             tvOwnerName.text = book.ownerName
-            if (book.imageUri != null) {
-                ivBookCover.setImageURI(book.imageUri)
-                ivBookCover.visibility = View.VISIBLE
-            } else {
-                ivBookCover.setImageURI(null)
+
+            val imageSource: Any = book.imageUri
+                ?: book.getBestRemoteImageUrl()
+                ?: R.drawable.placeholder_book_cover
+
+            ivBookCover.load(imageSource) {
+                crossfade(true)
+                placeholder(R.drawable.placeholder_book_cover)
+                error(R.drawable.placeholder_book_cover)
             }
+
             btnViewBook.setOnClickListener { onBookClick(book) }
             ivOwnerProfile.setOnClickListener { onOwnerClick(book) }
             tvOwnerName.setOnClickListener { onOwnerClick(book) }
+            root.setOnClickListener { onBookClick(book) }
         }
     }
 

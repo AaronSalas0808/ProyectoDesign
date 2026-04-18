@@ -1,11 +1,13 @@
 package com.example.proyecto.ui.discovery
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentBookInfoBinding
 
@@ -22,21 +24,32 @@ class BookInfoFragment : Fragment() {
         _binding = FragmentBookInfoBinding.inflate(inflater, container, false)
 
         val args = arguments
-        binding.tvBookTitle.text  = args?.getString("bookTitle")    ?: ""
-        binding.tvAuthor.text     = args?.getString("bookAuthor")   ?: ""
-        binding.tvYear.text       = args?.getString("bookYear")     ?: ""
-        binding.tvOwnerName.text  = args?.getString("ownerName")    ?: ""
 
-        val pages    = args?.getString("bookPages")    ?: ""
+        binding.tvBookTitle.text = args?.getString("bookTitle") ?: ""
+        binding.tvAuthor.text = args?.getString("bookAuthor") ?: ""
+        binding.tvYear.text = args?.getString("bookYear") ?: ""
+        binding.tvOwnerName.text = args?.getString("ownerName") ?: ""
+
+        val pages = args?.getString("bookPages") ?: ""
         val language = args?.getString("bookLanguage") ?: ""
-        binding.tvPages.text    = "$pages Pages"
+        binding.tvPages.text = "$pages Pages"
         binding.tvLanguage.text = language
 
         val synopsis = args?.getString("bookSynopsis") ?: ""
-        if (synopsis.isNotEmpty()) binding.tvStory.text = synopsis
+        if (synopsis.isNotEmpty()) {
+            binding.tvStory.text = synopsis
+        }
 
-        val imageUri = args?.getParcelable<android.net.Uri>("bookImageUri")
-        if (imageUri != null) binding.ivBookCover.setImageURI(imageUri)
+        val imageUri = args?.getParcelable<Uri>("bookImageUri")
+        val imageUrl = args?.getString("bookImageUrl")
+
+        val imageSource: Any = imageUri ?: imageUrl ?: R.drawable.placeholder_book_cover
+
+        binding.ivBookCover.load(imageSource) {
+            crossfade(true)
+            placeholder(R.drawable.placeholder_book_cover)
+            error(R.drawable.placeholder_book_cover)
+        }
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
@@ -48,16 +61,22 @@ class BookInfoFragment : Fragment() {
             }
             findNavController().navigate(R.id.action_book_info_to_profile_owner, bundle)
         }
+
         binding.ivOwnerProfile.setOnClickListener(ownerClickListener)
         binding.tvOwnerName.setOnClickListener(ownerClickListener)
 
         binding.btnRequestLoan.setOnClickListener {
             val bookTitle = args?.getString("bookTitle") ?: ""
             val ownerName = args?.getString("ownerName") ?: ""
+
             val bundle = Bundle().apply {
                 putString("ownerName", ownerName)
-                putString("defaultMessage", "Hola estoy interesado en poder leer $bookTitle ¿se encuentra disponible?")
+                putString(
+                    "defaultMessage",
+                    "Hola estoy interesado en poder leer $bookTitle ¿se encuentra disponible?"
+                )
             }
+
             findNavController().navigate(R.id.action_book_info_to_chat, bundle)
         }
 

@@ -45,8 +45,9 @@ class DiscoveryFragment : Fragment() {
         binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+
             override fun afterTextChanged(s: Editable?) {
                 searchQuery = s?.toString() ?: ""
                 applyFilter()
@@ -58,7 +59,9 @@ class DiscoveryFragment : Fragment() {
         viewModel.error.observe(viewLifecycleOwner) { error ->
             if (!error.isNullOrEmpty()) {
                 android.widget.Toast.makeText(
-                    requireContext(), "Error: $error", android.widget.Toast.LENGTH_LONG
+                    requireContext(),
+                    "Error: $error",
+                    android.widget.Toast.LENGTH_LONG
                 ).show()
             }
         }
@@ -93,10 +96,14 @@ class DiscoveryFragment : Fragment() {
                 isFocusable = true
                 setOnClickListener { selectChip(genre, this, container) }
             }
+
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { marginStart = if (genre == "Todos") 0 else dpToPx(10) }
+            ).apply {
+                marginStart = if (genre == "Todos") 0 else dpToPx(10)
+            }
+
             chip.layoutParams = params
             applyChipStyle(chip, genre == "Todos")
             container.addView(chip)
@@ -108,6 +115,7 @@ class DiscoveryFragment : Fragment() {
             val chip = container.getChildAt(i) as? TextView ?: continue
             applyChipStyle(chip, chip == selected)
         }
+
         selectedGenre = genre
         applyFilter()
     }
@@ -124,8 +132,14 @@ class DiscoveryFragment : Fragment() {
 
     private fun applyFilter() {
         val filtered = allBooks
-            .filter { selectedGenre == "Todos" || it.genre.equals(selectedGenre, ignoreCase = true) }
-            .filter { searchQuery.isBlank() || it.title.contains(searchQuery, ignoreCase = true) || it.author.contains(searchQuery, ignoreCase = true) }
+            .filter {
+                selectedGenre == "Todos" || it.genre.equals(selectedGenre, ignoreCase = true)
+            }
+            .filter {
+                searchQuery.isBlank() ||
+                        it.title.contains(searchQuery, ignoreCase = true) ||
+                        it.author.contains(searchQuery, ignoreCase = true)
+            }
 
         binding.rvBooks.adapter = BookAdapter(
             books = filtered,
@@ -139,19 +153,26 @@ class DiscoveryFragment : Fragment() {
                     putString("ownerName", book.ownerName)
                     putString("bookSynopsis", book.synopsis)
                     putParcelable("bookImageUri", book.imageUri)
+                    putString("bookImageUrl", book.getBestRemoteImageUrl())
                 }
                 findNavController().navigate(R.id.action_discovery_to_book_info, bundle)
             },
             onOwnerClick = { book ->
-                val bundle = Bundle().apply { putString("ownerName", book.ownerName) }
+                val bundle = Bundle().apply {
+                    putString("ownerName", book.ownerName)
+                }
                 findNavController().navigate(R.id.action_discovery_to_profile_owner, bundle)
             }
         )
     }
 
-    private fun dpToPx(dp: Int) = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), resources.displayMetrics
-    ).toInt()
+    private fun dpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics
+        ).toInt()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

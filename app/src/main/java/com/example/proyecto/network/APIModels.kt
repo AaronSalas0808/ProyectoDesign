@@ -1,5 +1,7 @@
 package com.example.proyecto.network
 
+import com.google.gson.annotations.SerializedName
+
 data class OwnerDto(
     val initials: String,
     val name: String,
@@ -15,7 +17,11 @@ data class BookItemDto(
     val language: String,
     val genre: String,
     val color: String,
-    val owner: OwnerDto
+    val owner: OwnerDto,
+    val images: List<String>? = null,
+    @SerializedName("cover_url")
+    val coverUrl: String? = null,
+    val isbn: String? = null
 )
 
 data class BooksResponseDto(
@@ -34,7 +40,11 @@ data class BookDetailDto(
     val genre: String,
     val color: String,
     val synopsis: String,
-    val owner: OwnerDto
+    val owner: OwnerDto,
+    val images: List<String>? = null,
+    @SerializedName("cover_url")
+    val coverUrl: String? = null,
+    val isbn: String? = null
 )
 
 data class CommunityPostItemDto(
