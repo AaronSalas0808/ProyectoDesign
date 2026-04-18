@@ -7,7 +7,8 @@ data class ChatMessage(
     val type: Int = TYPE_NORMAL
 ) {
     companion object {
-        const val TYPE_NORMAL = 0
+        const val TYPE_NORMAL      = 0
         const val TYPE_BOOK_SHARED = 1
+        const val TYPE_DELIVER     = 2
     }
 }

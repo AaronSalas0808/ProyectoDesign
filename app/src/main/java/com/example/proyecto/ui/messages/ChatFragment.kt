@@ -54,7 +54,11 @@ class ChatFragment : Fragment() {
             goToMessages()
         }
 
-        adapter = ChatAdapter(messages)
+        adapter = ChatAdapter(
+            messages,
+            onShareBookClick = { findNavController().navigate(R.id.action_chat_to_shared) },
+            onDeliverBookClick = { findNavController().navigate(R.id.action_chat_to_return) }
+        )
         binding.rvMessages.layoutManager = LinearLayoutManager(requireContext()).apply {
             stackFromEnd = true
         }
@@ -130,12 +134,18 @@ class ChatFragment : Fragment() {
 
         view.findViewById<View>(R.id.optionShareBook).setOnClickListener {
             sheet.dismiss()
-            Toast.makeText(requireContext(), "Esta opción sigue igual por ahora", Toast.LENGTH_SHORT).show()
+            val time = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(java.util.Date())
+            messages.add(ChatMessage(text = "", time = time, isSent = true, type = ChatMessage.TYPE_BOOK_SHARED))
+            adapter.notifyItemInserted(messages.size - 1)
+            binding.rvMessages.scrollToPosition(messages.size - 1)
         }
 
         view.findViewById<View>(R.id.optionDeliverBook).setOnClickListener {
             sheet.dismiss()
-            Toast.makeText(requireContext(), "Esta opción sigue igual por ahora", Toast.LENGTH_SHORT).show()
+            val time = java.text.SimpleDateFormat("h:mm a", java.util.Locale.getDefault()).format(java.util.Date())
+            messages.add(ChatMessage(text = "", time = time, isSent = true, type = ChatMessage.TYPE_DELIVER))
+            adapter.notifyItemInserted(messages.size - 1)
+            binding.rvMessages.scrollToPosition(messages.size - 1)
         }
 
         sheet.setContentView(view)

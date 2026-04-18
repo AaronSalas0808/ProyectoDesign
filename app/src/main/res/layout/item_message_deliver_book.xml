@@ -8,7 +8,7 @@
     android:paddingVertical="4dp">
 
     <LinearLayout
-        android:id="@+id/cardShareBook"
+        android:id="@+id/cardDeliverBook"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -28,7 +28,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_book_logo"
+                android:src="@drawable/ic_arrow_forward"
                 android:tint="#FFFFFF"
                 android:contentDescription="@null" />
 
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
-                android:text="Compartir libro"
+                android:text="Entregar libro"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF" />
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Toca para ver libros disponibles"
+            android:text="Toca para confirmar la entrega"
             android:textSize="11sp"
             android:textColor="#FFCCC0" />
 
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Ver libros  →"
+            android:text="Confirmar entrega  →"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
