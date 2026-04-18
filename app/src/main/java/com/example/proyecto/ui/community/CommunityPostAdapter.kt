@@ -27,6 +27,7 @@ class CommunityPostAdapter(
         val tvCommentCount: TextView = itemView.findViewById(R.id.tvCommentCount)
         val ivLikeIcon: ImageView = itemView.findViewById(R.id.ivLikeIcon)
         val ivCommentIcon: ImageView = itemView.findViewById(R.id.ivCommentIcon)
+        val ivPostImage: ImageView = itemView.findViewById(R.id.ivPostImage)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -43,6 +44,13 @@ class CommunityPostAdapter(
         holder.tvContent.text = post.content
         holder.tvLikeCount.text = post.likeCount.toString()
         holder.tvCommentCount.text = post.commentCount.toString()
+
+        if (post.imageUri != null) {
+            holder.ivPostImage.visibility = View.VISIBLE
+            holder.ivPostImage.setImageURI(post.imageUri)
+        } else {
+            holder.ivPostImage.visibility = View.GONE
+        }
 
         holder.ivPostAvatar.setOnClickListener { onAuthorClick(post) }
         holder.tvAuthorName.setOnClickListener { onAuthorClick(post) }

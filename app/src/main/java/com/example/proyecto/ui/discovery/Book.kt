@@ -1,5 +1,7 @@
 package com.example.proyecto.ui.discovery
 
+import android.net.Uri
+
 data class Book(
     val id: Int,
     val title: String,
@@ -12,5 +14,6 @@ data class Book(
     val color: String = "",
     val synopsis: String = "",
     val ownerInitials: String = "",
-    val maxDays: Int? = null
+    val maxDays: Int? = null,
+    val imageUri: Uri? = null
 )

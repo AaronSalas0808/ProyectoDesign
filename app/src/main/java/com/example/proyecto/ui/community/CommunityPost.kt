@@ -1,5 +1,7 @@
 package com.example.proyecto.ui.community
 
+import android.net.Uri
+
 data class CommunityPost(
     val authorName: String,
     val timestamp: String,
@@ -8,5 +10,6 @@ data class CommunityPost(
     val commentCount: Int,
     val tag: String,
     val comments: List<String> = emptyList(),
-    val isLiked: Boolean = false
+    val isLiked: Boolean = false,
+    val imageUri: Uri? = null
 )

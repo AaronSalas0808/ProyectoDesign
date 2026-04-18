@@ -27,13 +27,14 @@ class DiscoveryFragment : Fragment() {
     private var allBooks: List<Book> = emptyList()
     private var selectedGenre: String = "Todos"
     private var searchQuery: String = ""
+    private lateinit var viewModel: DiscoveryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel = ViewModelProvider(this)[DiscoveryViewModel::class.java]
+        viewModel = ViewModelProvider(this)[DiscoveryViewModel::class.java]
 
         _binding = FragmentDiscoveryBinding.inflate(inflater, container, false)
 
@@ -68,6 +69,11 @@ class DiscoveryFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadBooks()
     }
 
     private fun setupGenreChips() {
@@ -131,6 +137,8 @@ class DiscoveryFragment : Fragment() {
                     putString("bookPages", book.pages)
                     putString("bookLanguage", book.language)
                     putString("ownerName", book.ownerName)
+                    putString("bookSynopsis", book.synopsis)
+                    putParcelable("bookImageUri", book.imageUri)
                 }
                 findNavController().navigate(R.id.action_discovery_to_book_info, bundle)
             },

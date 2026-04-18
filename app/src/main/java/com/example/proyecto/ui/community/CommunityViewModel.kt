@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyecto.network.BookRepository
+import com.example.proyecto.network.LocalDataStore
 import kotlinx.coroutines.launch
 
 class CommunityViewModel : ViewModel() {
@@ -22,13 +23,21 @@ class CommunityViewModel : ViewModel() {
     private fun loadPosts() {
         viewModelScope.launch {
             try {
-                val posts = BookRepository.getCommunityPosts()
-                _allPosts.value = posts
+                val apiPosts = BookRepository.getCommunityPosts()
+                _allPosts.value = LocalDataStore.localPosts + apiPosts
                 applyFilter()
             } catch (e: Exception) {
                 android.util.Log.e("CommunityViewModel", "Error loading posts: ${e.message}", e)
+                _allPosts.value = LocalDataStore.localPosts
+                applyFilter()
             }
         }
+    }
+
+    fun addPost(post: CommunityPost) {
+        LocalDataStore.addPost(post)
+        _allPosts.value = listOf(post) + _allPosts.value.orEmpty()
+        applyFilter()
     }
 
     fun filterPosts(tag: String) {

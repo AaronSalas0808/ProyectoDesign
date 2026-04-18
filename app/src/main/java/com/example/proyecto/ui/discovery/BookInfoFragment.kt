@@ -32,6 +32,12 @@ class BookInfoFragment : Fragment() {
         binding.tvPages.text    = "$pages Pages"
         binding.tvLanguage.text = language
 
+        val synopsis = args?.getString("bookSynopsis") ?: ""
+        if (synopsis.isNotEmpty()) binding.tvStory.text = synopsis
+
+        val imageUri = args?.getParcelable<android.net.Uri>("bookImageUri")
+        if (imageUri != null) binding.ivBookCover.setImageURI(imageUri)
+
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }

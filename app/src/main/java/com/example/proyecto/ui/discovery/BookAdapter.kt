@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto.databinding.BookCardBinding
+import android.view.View
 
 class BookAdapter(
     private val books: List<Book>,
@@ -27,6 +28,12 @@ class BookAdapter(
             tvBookTitle.text = book.title
             tvBookAuthor.text = book.author
             tvOwnerName.text = book.ownerName
+            if (book.imageUri != null) {
+                ivBookCover.setImageURI(book.imageUri)
+                ivBookCover.visibility = View.VISIBLE
+            } else {
+                ivBookCover.setImageURI(null)
+            }
             btnViewBook.setOnClickListener { onBookClick(book) }
             ivOwnerProfile.setOnClickListener { onOwnerClick(book) }
             tvOwnerName.setOnClickListener { onOwnerClick(book) }

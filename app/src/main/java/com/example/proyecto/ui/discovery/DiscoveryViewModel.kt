@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyecto.network.BookRepository
+import com.example.proyecto.network.LocalDataStore
 import kotlinx.coroutines.launch
 
 class DiscoveryViewModel : ViewModel() {
@@ -22,10 +23,12 @@ class DiscoveryViewModel : ViewModel() {
     fun loadBooks() {
         viewModelScope.launch {
             try {
-                _books.value = BookRepository.getBooks()
+                val apiBooks = BookRepository.getBooks()
+                _books.value = LocalDataStore.localBooks + apiBooks
                 _error.value = null
             } catch (e: Exception) {
                 android.util.Log.e("DiscoveryViewModel", "Error loading books: ${e.message}", e)
+                _books.value = LocalDataStore.localBooks
                 _error.value = e.message ?: "Error desconocido"
             }
         }
