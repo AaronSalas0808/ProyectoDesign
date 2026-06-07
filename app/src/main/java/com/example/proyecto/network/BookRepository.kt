@@ -52,14 +52,22 @@ object BookRepository {
     }
 
     suspend fun getCommunityPosts(): List<CommunityPost> {
-        return RetrofitClient.api.getCommunityPosts().data.map { dto ->
+        val response = RetrofitClient.api.getCommunityPosts()
+
+        return response.data.map { item ->
             CommunityPost(
-                authorName = dto.name,
-                timestamp = dto.time,
-                content = "${dto.title}\n\n${dto.body}",
-                likeCount = dto.likes,
-                commentCount = dto.comments,
-                tag = dto.tag
+                id = item.id,
+                authorName = item.name,
+                timestamp = item.time,
+                title = item.title,
+                content = item.body,
+                likeCount = item.likes,
+                commentCount = item.comments,
+                tag = item.tag,
+                comments = emptyList(),
+                isLiked = false,
+                isMine = false,
+                imageUri = null
             )
         }
     }

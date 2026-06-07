@@ -15,7 +15,8 @@ class CommunityPostAdapter(
     private var posts: List<CommunityPost>,
     private val onAuthorClick: (CommunityPost) -> Unit = {},
     private val onLikeClick: (CommunityPost) -> Unit = {},
-    private val onCommentClick: (CommunityPost) -> Unit = {}
+    private val onCommentClick: (CommunityPost) -> Unit = {},
+    private val onDeleteClick: (CommunityPost) -> Unit = {}
 ) : RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {
 
     inner class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,7 +42,13 @@ class CommunityPostAdapter(
 
         holder.tvAuthorName.text = post.authorName
         holder.tvTimestamp.text = post.timestamp
-        holder.tvContent.text = post.content
+
+        holder.tvContent.text = if (post.title.isNotBlank()) {
+            "${post.title}\n\n${post.content}"
+        } else {
+            post.content
+        }
+
         holder.tvLikeCount.text = post.likeCount.toString()
         holder.tvCommentCount.text = post.commentCount.toString()
 
@@ -52,23 +59,48 @@ class CommunityPostAdapter(
             holder.ivPostImage.visibility = View.GONE
         }
 
-        holder.ivPostAvatar.setOnClickListener { onAuthorClick(post) }
-        holder.tvAuthorName.setOnClickListener { onAuthorClick(post) }
+        holder.ivPostAvatar.setOnClickListener {
+            onAuthorClick(post)
+        }
+
+        holder.tvAuthorName.setOnClickListener {
+            onAuthorClick(post)
+        }
 
         val likeColor = if (post.isLiked) "#E53935" else "#888888"
+
         ImageViewCompat.setImageTintList(
             holder.ivLikeIcon,
             ColorStateList.valueOf(Color.parseColor(likeColor))
         )
 
-        holder.ivLikeIcon.setOnClickListener { onLikeClick(post) }
-        holder.tvLikeCount.setOnClickListener { onLikeClick(post) }
+        holder.ivLikeIcon.setOnClickListener {
+            onLikeClick(post)
+        }
 
-        holder.ivCommentIcon.setOnClickListener { onCommentClick(post) }
-        holder.tvCommentCount.setOnClickListener { onCommentClick(post) }
+        holder.tvLikeCount.setOnClickListener {
+            onLikeClick(post)
+        }
+
+        holder.ivCommentIcon.setOnClickListener {
+            onCommentClick(post)
+        }
+
+        holder.tvCommentCount.setOnClickListener {
+            onCommentClick(post)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            if (post.isMine) {
+                onDeleteClick(post)
+                true
+            } else {
+                false
+            }
+        }
     }
 
-    override fun getItemCount() = posts.size
+    override fun getItemCount(): Int = posts.size
 
     fun updatePosts(newPosts: List<CommunityPost>) {
         posts = newPosts

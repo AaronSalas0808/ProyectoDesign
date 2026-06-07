@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_publication_dialog"
+    android:padding="22dp">
+
+    <!-- Encabezado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCommentsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comentarios"
+                android:textColor="#1A1009"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="serif" />
+
+            <TextView
+                android:id="@+id/tvCommentsSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Publicación"
+                android:textColor="#9E8B75"
+                android:textSize="13sp"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnCloseComments"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/ic_close"
+            android:tint="#1A1009"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/close_description" />
+
+    </LinearLayout>
+
+    <!-- Vista previa del post -->
+    <TextView
+        android:id="@+id/tvPostPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Título de publicación"
+        android:textColor="#1A1009"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:background="@drawable/bg_comment_preview"
+        android:padding="14dp"
+        android:layout_marginBottom="14dp" />
+
+    <!-- Lista de comentarios -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvComments"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
+
+    <!-- Estado vacío / carga -->
+    <TextView
+        android:id="@+id/tvCommentsEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cargando comentarios..."
+        android:textColor="#9E8B75"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="18dp"
+        android:visibility="gone" />
+
+    <!-- Campo para comentar -->
+    <EditText
+        android:id="@+id/etComment"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:hint="Escribe un comentario..."
+        android:textColorHint="#B8B4A0"
+        android:textColor="#1A1009"
+        android:textSize="14sp"
+        android:gravity="top|start"
+        android:inputType="textMultiLine|textCapSentences"
+        android:background="@drawable/bg_input_field"
+        android:padding="14dp"
+        android:layout_marginTop="12dp" />
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="14dp">
+
+        <Button
+            android:id="@+id/btnCancelComment"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:text="Cerrar"
+            android:textColor="#7A2515"
+            android:textSize="14sp"
+            android:background="@drawable/btn_cancel_publication"
+            android:stateListAnimator="@null"
+            android:layout_marginEnd="10dp" />
+
+        <Button
+            android:id="@+id/btnSendComment"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:text="Enviar"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+</LinearLayout>

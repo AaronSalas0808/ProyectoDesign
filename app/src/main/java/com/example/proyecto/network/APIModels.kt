@@ -110,7 +110,7 @@ data class BasicActionResponseDto(
     val status: String
 )
 
-// -------------------- COMMUNITY --------------------
+// -------------------- COMMUNITY OLD DTO --------------------
 
 data class CommunityPostItemDto(
     val id: Int,
@@ -126,6 +126,55 @@ data class CommunityPostItemDto(
 
 data class CommunityPostsResponseDto(
     val data: List<CommunityPostItemDto>
+)
+
+// -------------------- COMMUNITY POSTS API --------------------
+
+data class PostsPagedResponseDto(
+    val content: List<PostApiDto> = emptyList(),
+
+    @SerializedName("total_pages")
+    val totalPages: Int = 1,
+
+    @SerializedName("total_elements")
+    val totalElements: Int = 0
+)
+
+data class PostApiDto(
+    val id: Int,
+    val author: String? = null,
+
+    @SerializedName("created_at")
+    val createdAt: String? = null,
+
+    val title: String? = null,
+    val content: String? = null,
+    val category: String? = null,
+    val likes: Int? = 0,
+
+    @SerializedName("comments_count")
+    val commentsCount: Int? = 0
+)
+
+data class CreatePostRequestDto(
+    val author: String,
+    val category: String,
+    val title: String,
+    val content: String
+)
+
+data class CommentApiDto(
+    val id: Int? = null,
+    val author: String? = null,
+    val content: String? = null,
+
+    @SerializedName("created_at")
+    val createdAt: String? = null
+)
+
+data class CreateCommentRequestDto(
+    val author: String,
+    val content: String
 )
 
 // -------------------- CONVERSATIONS --------------------

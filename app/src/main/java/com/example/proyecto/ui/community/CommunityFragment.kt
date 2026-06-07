@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -29,17 +30,30 @@ class CommunityFragment : Fragment() {
 
         adapter = CommunityPostAdapter(
             posts = emptyList(),
+
             onAuthorClick = { post ->
                 val bundle = Bundle().apply {
                     putString("ownerName", post.authorName)
                 }
-                findNavController().navigate(R.id.action_community_to_profile_owner, bundle)
+
+                findNavController().navigate(
+                    R.id.action_community_to_profile_owner,
+                    bundle
+                )
             },
+
             onLikeClick = { post ->
                 viewModel.toggleLike(post)
             },
+
             onCommentClick = { post ->
-                showCommentsDialog(post)
+                CommentsDialogFragment
+                    .newInstance(post)
+                    .show(parentFragmentManager, "comments_dialog")
+            },
+
+            onDeleteClick = { post ->
+                confirmDeletePost(post)
             }
         )
 
@@ -50,28 +64,40 @@ class CommunityFragment : Fragment() {
             adapter.updatePosts(posts)
         }
 
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (!error.isNullOrBlank()) {
+                Toast.makeText(
+                    requireContext(),
+                    error,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
         binding.ivMenuBurger.setOnClickListener {
             (requireActivity() as com.example.proyecto.MainActivity).openDrawer()
         }
 
         binding.fabNewPost.setOnClickListener {
-            CreatePublicationDialog().show(parentFragmentManager, "create_post")
+            CreatePublicationDialog().show(
+                parentFragmentManager,
+                "create_post"
+            )
         }
+
+        viewModel.loadPosts()
 
         return binding.root
     }
 
-    private fun showCommentsDialog(post: CommunityPost) {
-        val message = if (post.comments.isEmpty()) {
-            "Este post todavía no tiene comentarios."
-        } else {
-            post.comments.joinToString(separator = "\n\n")
-        }
-
+    private fun confirmDeletePost(post: CommunityPost) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Comentarios de ${post.authorName}")
-            .setMessage(message)
-            .setPositiveButton("Cerrar", null)
+            .setTitle("Eliminar publicación")
+            .setMessage("¿Seguro que deseas eliminar esta publicación?")
+            .setPositiveButton("Eliminar") { _, _ ->
+                viewModel.deletePost(post)
+            }
+            .setNegativeButton("Cancelar", null)
             .show()
     }
 

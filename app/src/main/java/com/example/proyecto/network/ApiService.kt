@@ -8,8 +8,11 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
+
+    // -------------------- AUTH --------------------
 
     @POST("users/login")
     suspend fun loginUser(
@@ -20,6 +23,8 @@ interface ApiService {
     suspend fun registerUser(
         @Body body: RegisterRequestDto
     ): Response<ResponseBody>
+
+    // -------------------- BOOKS --------------------
 
     @GET("books")
     suspend fun getBooks(): BooksResponseDto
@@ -45,8 +50,47 @@ interface ApiService {
         @Path("id") id: Int
     ): BasicActionResponseDto
 
+    // -------------------- COMMUNITY OLD --------------------
+
     @GET("community/posts")
     suspend fun getCommunityPosts(): CommunityPostsResponseDto
+
+    // -------------------- COMMUNITY POSTS API --------------------
+
+    @GET("posts/{page}/{pageSize}")
+    suspend fun getPosts(
+        @Path("page") page: Int,
+        @Path("pageSize") pageSize: Int
+    ): PostsPagedResponseDto
+
+    @POST("posts")
+    suspend fun createPost(
+        @Body body: CreatePostRequestDto
+    ): Response<PostApiDto>
+
+    @DELETE("posts/{postId}")
+    suspend fun deletePost(
+        @Path("postId") postId: Int
+    ): Response<Unit>
+
+    @POST("posts/{postId}/like")
+    suspend fun likePost(
+        @Path("postId") postId: Int,
+        @Query("action") action: String
+    ): Response<PostApiDto>
+
+    @GET("posts/{postId}/comments")
+    suspend fun getComments(
+        @Path("postId") postId: Int
+    ): List<CommentApiDto>
+
+    @POST("posts/{postId}/comments")
+    suspend fun createComment(
+        @Path("postId") postId: Int,
+        @Body body: CreateCommentRequestDto
+    ): Response<CommentApiDto>
+
+    // -------------------- CONVERSATIONS --------------------
 
     @GET("conversations")
     suspend fun getConversations(): ConversationsResponseDto

@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Nueva publicación"
+            android:text="Create New Post"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#1A1A1A"
@@ -36,22 +36,46 @@
 
     </LinearLayout>
 
-    <!-- Label -->
+    <!-- Título del post -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="¿Qué quieres compartir?"
+        android:text="Title"
         android:textSize="13sp"
         android:textColor="#7A7A6E"
         android:fontFamily="serif"
         android:layout_marginBottom="8dp" />
 
-    <!-- Campo de texto -->
+    <EditText
+        android:id="@+id/etPostTitle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Title"
+        android:textColorHint="#B8B4A0"
+        android:textSize="14sp"
+        android:textColor="#1A1A1A"
+        android:fontFamily="serif"
+        android:background="@drawable/bg_input_field"
+        android:padding="14dp"
+        android:singleLine="true"
+        android:inputType="textCapSentences"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Contenido -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="What's on your mind?"
+        android:textSize="13sp"
+        android:textColor="#7A7A6E"
+        android:fontFamily="serif"
+        android:layout_marginBottom="8dp" />
+
     <EditText
         android:id="@+id/etPublicationText"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:hint="Escribe algo sobre tu libro..."
+        android:hint="What's on your mind?"
         android:textColorHint="#B8B4A0"
         android:textSize="14sp"
         android:textColor="#1A1A1A"
@@ -60,9 +84,27 @@
         android:padding="14dp"
         android:gravity="top|start"
         android:inputType="textMultiLine|textCapSentences"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="16dp" />
 
-    <!-- Label imagen -->
+    <!-- Categoría -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textSize="13sp"
+        android:textColor="#7A7A6E"
+        android:fontFamily="serif"
+        android:layout_marginBottom="8dp" />
+
+    <Spinner
+        android:id="@+id/spPostCategory"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_input_field"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Imagen -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,7 +114,6 @@
         android:fontFamily="serif"
         android:layout_marginBottom="8dp" />
 
-    <!-- Zona upload -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
@@ -130,7 +171,7 @@
             android:layout_height="42dp"
             android:layout_weight="1"
             android:layout_marginEnd="10dp"
-            android:text="Cancelar"
+            android:text="Cancel"
             android:textSize="14sp"
             android:fontFamily="serif"
             android:textColor="#7A2515"
@@ -142,7 +183,7 @@
             android:layout_width="0dp"
             android:layout_height="42dp"
             android:layout_weight="1"
-            android:text="Publicar"
+            android:text="Post"
             android:textSize="14sp"
             android:textStyle="bold"
             android:fontFamily="serif"
