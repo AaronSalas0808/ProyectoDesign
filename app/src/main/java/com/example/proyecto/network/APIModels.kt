@@ -2,6 +2,40 @@ package com.example.proyecto.network
 
 import com.google.gson.annotations.SerializedName
 
+// -------------------- AUTH --------------------
+
+data class LoginRequestDto(
+    val email: String,
+    val password: String
+)
+
+data class RegisterRequestDto(
+    val name: String,
+    val email: String,
+    val university: String,
+    val password: String
+)
+
+data class UserDto(
+    val id: String? = null,
+    val name: String? = null,
+    val email: String? = null,
+    val university: String? = null
+)
+
+data class AuthResponseDto(
+    val user: UserDto? = null,
+    val message: String? = null,
+    val status: String? = null
+)
+
+data class ErrorResponseDto(
+    val message: String? = null,
+    val error: String? = null
+)
+
+// -------------------- BOOKS --------------------
+
 data class OwnerDto(
     val initials: String,
     val name: String,
@@ -47,22 +81,6 @@ data class BookDetailDto(
     val isbn: String? = null
 )
 
-data class CommunityPostItemDto(
-    val id: Int,
-    val initials: String,
-    val name: String,
-    val time: String,
-    val title: String,
-    val body: String,
-    val likes: Int,
-    val comments: Int,
-    val tag: String
-)
-
-data class CommunityPostsResponseDto(
-    val data: List<CommunityPostItemDto>
-)
-
 data class CreateBookRequestDto(
     val title: String,
     val author: String,
@@ -91,6 +109,26 @@ data class BasicActionResponseDto(
     val message: String,
     val status: String
 )
+
+// -------------------- COMMUNITY --------------------
+
+data class CommunityPostItemDto(
+    val id: Int,
+    val initials: String,
+    val name: String,
+    val time: String,
+    val title: String,
+    val body: String,
+    val likes: Int,
+    val comments: Int,
+    val tag: String
+)
+
+data class CommunityPostsResponseDto(
+    val data: List<CommunityPostItemDto>
+)
+
+// -------------------- CONVERSATIONS --------------------
 
 data class ConversationItemDto(
     val id: Int,

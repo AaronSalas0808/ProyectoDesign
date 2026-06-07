@@ -12,13 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentEditProfileBinding
 import com.example.proyecto.network.BookRepository
+import com.example.proyecto.session.SessionManager
 import com.example.proyecto.ui.discovery.Book
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.example.proyecto.R
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -27,8 +26,7 @@ class EditProfileFragment : Fragment() {
     private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
+    private lateinit var sessionManager: SessionManager
     private lateinit var adapter: EditBookAdapter
     private val books = mutableListOf<Book>()
 
@@ -37,23 +35,36 @@ class EditProfileFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
 
-        requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
+        sessionManager = SessionManager(requireContext())
 
-        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.nav_view)
+            ?.visibility = View.GONE
 
-        adapter = EditBookAdapter(books) { book -> confirmDelete(book) }
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        adapter = EditBookAdapter(books) { book ->
+            confirmDelete(book)
+        }
+
         binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
         binding.rvBooks.adapter = adapter
 
-        binding.avatarContainer.setOnClickListener { pickImage.launch("image/*") }
+        binding.avatarContainer.setOnClickListener {
+            pickImage.launch("image/*")
+        }
 
-        binding.btnSave.setOnClickListener { saveProfile() }
+        binding.btnSave.setOnClickListener {
+            saveProfile()
+        }
 
         loadProfile()
         loadBooks()
@@ -62,54 +73,54 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun loadProfile() {
-        val uid = auth.currentUser?.uid ?: return
-
-        val photoPath = requireContext().getSharedPreferences("profile", 0)
-            .getString("photo_path_$uid", null)
-        if (photoPath != null) {
-            val file = File(photoPath)
-            if (file.exists()) binding.ivProfilePhoto.setImageURI(Uri.fromFile(file))
+        if (!sessionManager.isLoggedIn()) {
+            (requireActivity() as? com.example.proyecto.MainActivity)?.logoutUser()
+            return
         }
 
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener { doc ->
-                val name = doc.getString("name").orEmpty().ifBlank {
-                    auth.currentUser?.displayName.orEmpty()
-                }
-                binding.etName.setText(name)
+        binding.etName.setText(sessionManager.getDisplayName())
+
+        val photoPath = sessionManager.getProfilePhotoPath()
+        if (photoPath.isNotBlank()) {
+            val file = File(photoPath)
+            if (file.exists()) {
+                binding.ivProfilePhoto.setImageURI(Uri.fromFile(file))
             }
+        }
     }
 
     private fun loadBooks() {
-        val uid = auth.currentUser?.uid ?: return
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val userName = getUserName(uid)
+                val userName = sessionManager.getDisplayName()
+                val userEmail = sessionManager.getUserEmail()
+
                 val allBooks = BookRepository.getBooks()
-                val myBooks = allBooks.filter { it.ownerName.equals(userName, ignoreCase = true) }
+
+                val myBooks = allBooks.filter { book ->
+                    book.ownerName.equals(userName, ignoreCase = true) ||
+                            book.ownerName.equals(userEmail, ignoreCase = true)
+                }
+
                 books.clear()
                 books.addAll(myBooks)
+
                 adapter.notifyDataSetChanged()
                 updateBooksCount()
-                binding.tvEmptyBooks.visibility = if (books.isEmpty()) View.VISIBLE else View.GONE
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error cargando libros: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
-    private suspend fun getUserName(uid: String): String {
-        return kotlinx.coroutines.suspendCancellableCoroutine { cont ->
-            db.collection("users").document(uid).get()
-                .addOnSuccessListener { doc ->
-                    val name = doc.getString("name").orEmpty().ifBlank {
-                        auth.currentUser?.displayName.orEmpty()
-                    }
-                    cont.resume(name) {}
-                }
-                .addOnFailureListener {
-                    cont.resume(auth.currentUser?.displayName.orEmpty()) {}
-                }
+                binding.tvEmptyBooks.visibility =
+                    if (books.isEmpty()) View.VISIBLE else View.GONE
+
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Error cargando libros: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                binding.tvEmptyBooks.visibility =
+                    if (books.isEmpty()) View.VISIBLE else View.GONE
+            }
         }
     }
 
@@ -117,7 +128,9 @@ class EditProfileFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Eliminar libro")
             .setMessage("¿Eliminar \"${book.title}\" de la app?")
-            .setPositiveButton("Eliminar") { _, _ -> deleteBook(book) }
+            .setPositiveButton("Eliminar") { _, _ ->
+                deleteBook(book)
+            }
             .setNegativeButton("Cancelar", null)
             .show()
     }
@@ -126,59 +139,93 @@ class EditProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 BookRepository.deleteBook(book.id)
+
                 adapter.removeBook(book)
                 updateBooksCount()
-                binding.tvEmptyBooks.visibility = if (books.isEmpty()) View.VISIBLE else View.GONE
-                Toast.makeText(requireContext(), "\"${book.title}\" eliminado", Toast.LENGTH_SHORT).show()
+
+                binding.tvEmptyBooks.visibility =
+                    if (books.isEmpty()) View.VISIBLE else View.GONE
+
+                Toast.makeText(
+                    requireContext(),
+                    "\"${book.title}\" eliminado",
+                    Toast.LENGTH_SHORT
+                ).show()
+
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al eliminar: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error al eliminar: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
     private fun saveProfile() {
-        val uid = auth.currentUser?.uid ?: return
         val newName = binding.etName.text.toString().trim()
+
         if (newName.isBlank()) {
             binding.etName.error = "El nombre no puede estar vacío"
             return
         }
 
         binding.btnSave.isEnabled = false
-        db.collection("users").document(uid)
-            .update("name", newName)
-            .addOnSuccessListener {
-                (requireActivity() as? com.example.proyecto.MainActivity)?.refreshDrawerUser()
-                Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
-                findNavController().popBackStack()
-            }
-            .addOnFailureListener { e ->
-                binding.btnSave.isEnabled = true
-                Toast.makeText(requireContext(), "Error al guardar: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+
+        sessionManager.updateName(newName)
+
+        (requireActivity() as? com.example.proyecto.MainActivity)?.refreshDrawerUser()
+
+        Toast.makeText(
+            requireContext(),
+            "Perfil actualizado",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        findNavController().popBackStack()
     }
 
     private fun savePhotoLocally(uri: Uri) {
-        val uid = auth.currentUser?.uid ?: return
         try {
-            val dest = File(requireContext().filesDir, "profile_photo_$uid.jpg")
-            requireContext().contentResolver.openInputStream(uri)?.use { input ->
-                dest.outputStream().use { output -> input.copyTo(output) }
+            val userKey = when {
+                sessionManager.getUserId().isNotBlank() -> sessionManager.getUserId()
+                sessionManager.getUserEmail().isNotBlank() -> sessionManager.getUserEmail().substringBefore("@")
+                else -> "default_user"
             }
-            requireContext().getSharedPreferences("profile", 0)
-                .edit().putString("photo_path_$uid", dest.absolutePath).apply()
+
+            val dest = File(requireContext().filesDir, "profile_photo_$userKey.jpg")
+
+            requireContext().contentResolver.openInputStream(uri)?.use { input ->
+                dest.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+
+            sessionManager.saveProfilePhotoPath(dest.absolutePath)
+
             binding.ivProfilePhoto.setImageURI(Uri.fromFile(dest))
+
+            (requireActivity() as? com.example.proyecto.MainActivity)?.refreshDrawerUser()
+
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Error al guardar foto", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Error al guardar foto",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun updateBooksCount() {
-        binding.tvBooksCount.text = "${books.size} libro${if (books.size != 1) "s" else ""}"
+        binding.tvBooksCount.text =
+            "${books.size} libro${if (books.size != 1) "s" else ""}"
     }
 
     override fun onDestroyView() {
-        requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
+        requireActivity()
+            .findViewById<BottomNavigationView>(R.id.nav_view)
+            ?.visibility = View.VISIBLE
+
         super.onDestroyView()
         _binding = null
     }

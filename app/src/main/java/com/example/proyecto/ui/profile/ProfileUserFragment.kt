@@ -1,25 +1,24 @@
 package com.example.proyecto.ui.profile
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.proyecto.MainActivity
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentProfileBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.proyecto.session.SessionManager
+import java.io.File
 
 class ProfileUserFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,8 +27,7 @@ class ProfileUserFragment : Fragment() {
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
+        sessionManager = SessionManager(requireContext())
 
         setupClicks()
         loadUserProfile()
@@ -47,62 +45,33 @@ class ProfileUserFragment : Fragment() {
         }
 
         binding.tvViewAll.setOnClickListener {
-            // TODO: ver todos los libros disponibles
+            // Aquí puedes navegar a una lista completa de libros del usuario si luego la agregas.
         }
     }
 
     private fun loadUserProfile() {
-        val currentUser = auth.currentUser
-
-        if (currentUser == null) {
+        if (!sessionManager.isLoggedIn()) {
             (requireActivity() as MainActivity).logoutUser()
             return
         }
 
-        db.collection("users")
-            .document(currentUser.uid)
-            .get()
-            .addOnSuccessListener { document ->
-                val name = document.getString("name").orEmpty()
-                val username = document.getString("username").orEmpty()
+        binding.tvProfileName.text = sessionManager.getDisplayName()
+        binding.tvUsername.text = sessionManager.getDisplayEmail()
 
-                val displayName = when {
-                    name.isNotBlank() -> name
-                    !currentUser.displayName.isNullOrBlank() -> currentUser.displayName!!
-                    !currentUser.email.isNullOrBlank() -> currentUser.email!!
-                    else -> "Usuario"
-                }
-
-                val displayHandle = when {
-                    username.isNotBlank() -> "@$username"
-                    !currentUser.email.isNullOrBlank() -> "@${currentUser.email!!.substringBefore("@")}"
-                    else -> "@usuario"
-                }
-
-                binding.tvProfileName.text = displayName
-                binding.tvUsername.text = displayHandle
+        val photoPath = sessionManager.getProfilePhotoPath()
+        if (photoPath.isNotBlank()) {
+            val file = File(photoPath)
+            if (file.exists()) {
+                binding.ivProfilePhoto.setImageURI(Uri.fromFile(file))
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    requireContext(),
-                    "No se pudo cargar el perfil: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+        }
+    }
 
-                val fallbackName = when {
-                    !currentUser.displayName.isNullOrBlank() -> currentUser.displayName!!
-                    !currentUser.email.isNullOrBlank() -> currentUser.email!!
-                    else -> "Usuario"
-                }
-
-                val fallbackHandle = when {
-                    !currentUser.email.isNullOrBlank() -> "@${currentUser.email!!.substringBefore("@")}"
-                    else -> "@usuario"
-                }
-
-                binding.tvProfileName.text = fallbackName
-                binding.tvUsername.text = fallbackHandle
-            }
+    override fun onResume() {
+        super.onResume()
+        if (::sessionManager.isInitialized) {
+            loadUserProfile()
+        }
     }
 
     override fun onDestroyView() {

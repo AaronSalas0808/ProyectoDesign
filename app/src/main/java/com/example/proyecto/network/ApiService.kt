@@ -1,23 +1,38 @@
 package com.example.proyecto.network
 
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.Response
 
 interface ApiService {
+
+    @POST("users/login")
+    suspend fun loginUser(
+        @Body body: LoginRequestDto
+    ): Response<ResponseBody>
+
+    @POST("users/register")
+    suspend fun registerUser(
+        @Body body: RegisterRequestDto
+    ): Response<ResponseBody>
 
     @GET("books")
     suspend fun getBooks(): BooksResponseDto
 
     @GET("books/{id}")
-    suspend fun getBookById(@Path("id") id: Int): BookDetailDto
+    suspend fun getBookById(
+        @Path("id") id: Int
+    ): BookDetailDto
 
     @POST("books")
-    suspend fun createBook(@Body body: CreateBookRequestDto): CreateBookResponseDto
+    suspend fun createBook(
+        @Body body: CreateBookRequestDto
+    ): CreateBookResponseDto
 
     @PUT("books/{id}")
     suspend fun updateBook(
@@ -26,7 +41,9 @@ interface ApiService {
     ): BasicActionResponseDto
 
     @DELETE("books/{id}")
-    suspend fun deleteBook(@Path("id") id: Int): BasicActionResponseDto
+    suspend fun deleteBook(
+        @Path("id") id: Int
+    ): BasicActionResponseDto
 
     @GET("community/posts")
     suspend fun getCommunityPosts(): CommunityPostsResponseDto

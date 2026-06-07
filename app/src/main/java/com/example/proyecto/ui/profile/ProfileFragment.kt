@@ -19,6 +19,8 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileUserBinding? = null
     private val binding get() = _binding!!
 
+    private var ownerName: String = "Usuario"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,13 +28,17 @@ class ProfileFragment : Fragment() {
     ): View {
         _binding = FragmentProfileUserBinding.inflate(inflater, container, false)
 
-        val ownerName = arguments?.getString("ownerName") ?: "Elena Rodriguez"
+        ownerName = arguments?.getString("ownerName") ?: "Usuario"
         binding.tvProfileName.text = ownerName
 
-        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.btnMessage.setOnClickListener {
-            val bundle = Bundle().apply { putString("ownerName", ownerName) }
+            val bundle = Bundle().apply {
+                putString("ownerName", ownerName)
+            }
             findNavController().navigate(R.id.action_profile_owner_to_chat, bundle)
         }
 
@@ -52,17 +58,28 @@ class ProfileFragment : Fragment() {
 
                 binding.rvOwnerBooks.adapter = OwnerBookAdapter(books) { book ->
                     val bundle = Bundle().apply {
-                        putString("bookTitle",    book.title)
-                        putString("bookAuthor",   book.author)
-                        putString("bookYear",     book.year)
-                        putString("bookPages",    book.pages)
+                        putString("bookTitle", book.title)
+                        putString("bookAuthor", book.author)
+                        putString("bookYear", book.year)
+                        putString("bookPages", book.pages)
                         putString("bookLanguage", book.language)
-                        putString("ownerName",    book.ownerName)
+                        putString("ownerName", book.ownerName)
+                        putString("bookSynopsis", book.synopsis)
+                        putString("bookImageUrl", book.getBestRemoteImageUrl())
                     }
-                    findNavController().navigate(R.id.action_profile_owner_to_book_info, bundle)
+
+                    findNavController().navigate(
+                        R.id.action_profile_owner_to_book_info,
+                        bundle
+                    )
                 }
+
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error cargando libros", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Error cargando libros",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

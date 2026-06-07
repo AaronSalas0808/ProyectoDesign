@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -15,16 +14,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.proyecto.databinding.ActivityMainBinding
+import com.example.proyecto.session.SessionManager
 import com.example.proyecto.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
+    private lateinit var sessionManager: SessionManager
 
     private var tvDrawerName: TextView? = null
     private var tvDrawerHandle: TextView? = null
@@ -35,14 +32,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        sessionManager = SessionManager(this)
+
+        if (!sessionManager.isLoggedIn()) {
+            goToLogin()
+            return
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
-
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
         navView.setupWithNavController(navController)
 
         setupDrawer()
@@ -51,20 +53,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadDrawerUser()
+
+        if (::sessionManager.isInitialized && sessionManager.isLoggedIn()) {
+            loadDrawerUser()
+        }
     }
 
     private fun setupDrawer() {
         val drawer = binding.drawerLayout
 
-        // Referencias a vistas del burger menu
         tvDrawerName = drawer.findViewById(R.id.tvDrawerName)
         tvDrawerHandle = drawer.findViewById(R.id.tvDrawerHandle)
         itemLogOut = drawer.findViewById(R.id.itemLogOut)
         btnCloseDrawer = drawer.findViewById(R.id.btnCloseDrawer)
         btnEditProfile = drawer.findViewById(R.id.btnEditProfile)
 
-        // Deshabilita swipe para abrir
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -73,7 +76,11 @@ class MainActivity : AppCompatActivity() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     val blur = slideOffset * 18f
                     binding.container.setRenderEffect(
-                        RenderEffect.createBlurEffect(blur, blur, Shader.TileMode.CLAMP)
+                        RenderEffect.createBlurEffect(
+                            blur,
+                            blur,
+                            Shader.TileMode.CLAMP
+                        )
                     )
                 }
             }
@@ -85,83 +92,53 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // Fondo oscuro mientras abre
         drawer.setScrimColor(0x55000000.toInt())
 
-        // Cerrar con la X
         btnCloseDrawer?.setOnClickListener {
             drawer.closeDrawer(GravityCompat.START)
         }
 
         btnEditProfile?.setOnClickListener {
             drawer.closeDrawer(GravityCompat.START)
-            findNavController(R.id.nav_host_fragment_activity_main)
-                .navigate(R.id.navigation_edit_profile)
+
+            try {
+                findNavController(R.id.nav_host_fragment_activity_main)
+                    .navigate(R.id.navigation_edit_profile)
+            } catch (e: Exception) {
+                // Evita que la app se caiga si esa ruta no existe en el nav_graph.
+            }
         }
 
-        // Logout desde el menú
         itemLogOut?.setOnClickListener {
             AlertDialog.Builder(this)
                 .setTitle("Cerrar sesión")
                 .setMessage("¿Estás seguro que deseas cerrar sesión?")
-                .setPositiveButton("Cerrar sesión") { _, _ -> logoutUser() }
+                .setPositiveButton("Cerrar sesión") { _, _ ->
+                    logoutUser()
+                }
                 .setNegativeButton("Cancelar", null)
                 .show()
         }
     }
 
     private fun loadDrawerUser() {
-        val currentUser = auth.currentUser
+        val name = sessionManager.getUserName()
+        val email = sessionManager.getUserEmail()
+        val university = sessionManager.getUserUniversity()
 
-        if (currentUser == null) {
-            goToLogin()
-            return
+        val displayName = when {
+            name.isNotBlank() -> name
+            email.isNotBlank() -> email
+            else -> "Usuario"
         }
 
-        db.collection("users")
-            .document(currentUser.uid)
-            .get()
-            .addOnSuccessListener { document ->
-                val name = document.getString("name").orEmpty()
-                val username = document.getString("username").orEmpty()
+        val displayHandle = when {
+            email.isNotBlank() -> email
+            else -> "@usuario"
+        }
 
-                val displayName = when {
-                    name.isNotBlank() -> name
-                    !currentUser.displayName.isNullOrBlank() -> currentUser.displayName!!
-                    !currentUser.email.isNullOrBlank() -> currentUser.email!!
-                    else -> "Usuario"
-                }
-
-                val displayHandle = when {
-                    username.isNotBlank() -> "@$username"
-                    !currentUser.email.isNullOrBlank() -> "@${currentUser.email!!.substringBefore("@")}"
-                    else -> "@usuario"
-                }
-
-                tvDrawerName?.text = displayName
-                tvDrawerHandle?.text = displayHandle
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(
-                    this,
-                    "No se pudo cargar el usuario del menú: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                val fallbackName = when {
-                    !currentUser.displayName.isNullOrBlank() -> currentUser.displayName!!
-                    !currentUser.email.isNullOrBlank() -> currentUser.email!!
-                    else -> "Usuario"
-                }
-
-                val fallbackHandle = when {
-                    !currentUser.email.isNullOrBlank() -> "@${currentUser.email!!.substringBefore("@")}"
-                    else -> "@usuario"
-                }
-
-                tvDrawerName?.text = fallbackName
-                tvDrawerHandle?.text = fallbackHandle
-            }
+        tvDrawerName?.text = displayName
+        tvDrawerHandle?.text = displayHandle
     }
 
     fun openDrawer() {
@@ -178,7 +155,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun logoutUser() {
-        auth.signOut()
+        sessionManager.logout()
         goToLogin()
     }
 
@@ -186,6 +163,7 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+
         startActivity(intent)
         finish()
     }
