@@ -105,4 +105,47 @@ interface ApiService {
         @Path("id") id: Int,
         @Body body: SendConversationMessageRequestDto
     ): Response<Unit>
+
+// -------------------- CHATS API --------------------
+
+    @GET("chats/user/{userId}")
+    suspend fun getUserChats(
+        @Path("userId") userId: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String = "createdAt,desc"
+    ): ChatPagedResponseDto
+
+    @POST("chats/user/{userId}")
+    suspend fun openOrCreateChat(
+        @Path("userId") userId: String,
+        @Body body: CreateChatRequestDto
+    ): Response<ChatDto>
+
+    @GET("chats/{chatId}/messages")
+    suspend fun getChatMessages(
+        @Path("chatId") chatId: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort") sort: String = "sentAt,asc"
+    ): MessagePagedResponseDto
+
+    @POST("chats/{chatId}/messages")
+    suspend fun sendChatMessage(
+        @Path("chatId") chatId: String,
+        @Body body: SendChatMessageRequestDto
+    ): Response<MessageApiDto>
+
+    @POST("chats/{chatId}/messages/read")
+    suspend fun markChatAsRead(
+        @Path("chatId") chatId: String,
+        @Query("readerId") readerId: String
+    ): Response<Unit>
+
+    @POST("users/{userId}/fcm-token")
+    suspend fun updateFcmToken(
+        @Path("userId") userId: String,
+        @Body body: UpdateFcmTokenRequestDto
+    ): Response<Unit>
 }
+

@@ -91,4 +91,14 @@ class SessionManager(context: Context) {
     fun logout() {
         prefs.edit().clear().apply()
     }
+
+    fun saveFcmToken(token: String) {
+        prefs.edit()
+            .putString("fcm_token", token)
+            .apply()
+    }
+
+    fun getFcmToken(): String {
+        return prefs.getString("fcm_token", "") ?: ""
+    }
 }

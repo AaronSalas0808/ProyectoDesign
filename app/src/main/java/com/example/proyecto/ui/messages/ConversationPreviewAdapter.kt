@@ -22,6 +22,7 @@ class ConversationPreviewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_chat_preview, parent, false)
+
         return ConversationViewHolder(view)
     }
 
@@ -33,7 +34,9 @@ class ConversationPreviewAdapter(
         holder.tvChatTimestamp.text = item.time
         holder.viewUnreadBadge.visibility = if (item.unread) View.VISIBLE else View.GONE
 
-        holder.itemView.setOnClickListener { onClick(item) }
+        holder.itemView.setOnClickListener {
+            onClick(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size

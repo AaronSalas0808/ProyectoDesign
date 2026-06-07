@@ -205,3 +205,59 @@ data class ConversationMessagesResponseDto(
 data class SendConversationMessageRequestDto(
     val text: String
 )
+
+// -------------------- CHATS API --------------------
+
+data class ChatPagedResponseDto(
+    val content: List<ChatDto> = emptyList(),
+    val page: Int? = 0,
+    val totalPages: Int? = 1
+)
+
+data class ChatDto(
+    val id: String,
+    val participants: List<ChatParticipantDto>? = emptyList(),
+    val lastMessage: ChatLastMessageDto? = null,
+    val unreadCount: Int? = 0
+)
+
+data class ChatParticipantDto(
+    val userId: String? = null,
+    val name: String? = null,
+    val initials: String? = null
+)
+
+data class ChatLastMessageDto(
+    val content: String? = null,
+    val sentAt: String? = null
+)
+
+data class CreateChatRequestDto(
+    val name1: String,
+    val initials1: String,
+    val userId2: String,
+    val name2: String,
+    val initials2: String
+)
+
+data class MessagePagedResponseDto(
+    val content: List<MessageApiDto> = emptyList(),
+    val page: Int? = 0,
+    val totalPages: Int? = 1
+)
+
+data class MessageApiDto(
+    val id: String? = null,
+    val senderId: String? = null,
+    val content: String? = null,
+    val sentAt: String? = null
+)
+
+data class SendChatMessageRequestDto(
+    val senderId: String,
+    val content: String
+)
+
+data class UpdateFcmTokenRequestDto(
+    val token: String
+)

@@ -1,22 +1,33 @@
 package com.example.proyecto
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.proyecto.databinding.ActivityMainBinding
+import com.example.proyecto.network.RetrofitClient
+import com.example.proyecto.network.UpdateFcmTokenRequestDto
+import com.example.proyecto.notifications.NotificationSocketManager
 import com.example.proyecto.session.SessionManager
 import com.example.proyecto.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +39,17 @@ class MainActivity : AppCompatActivity() {
     private var itemLogOut: View? = null
     private var btnCloseDrawer: View? = null
     private var btnEditProfile: View? = null
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            Log.d("FCM_PERMISSION", "Permiso notificaciones concedido: $isGranted")
+
+            if (isGranted) {
+                registerFcmToken()
+            } else {
+                Log.e("FCM_PERMISSION", "El usuario no concedió permiso de notificaciones")
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +71,10 @@ class MainActivity : AppCompatActivity() {
 
         setupDrawer()
         loadDrawerUser()
+
+        requestNotificationPermissionIfNeeded()
+        registerFcmToken()
+        startNotificationSocket()
     }
 
     override fun onResume() {
@@ -56,7 +82,14 @@ class MainActivity : AppCompatActivity() {
 
         if (::sessionManager.isInitialized && sessionManager.isLoggedIn()) {
             loadDrawerUser()
+            startNotificationSocket()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // No lo detenemos aquí para permitir que siga vivo mientras el proceso exista.
+        // Se detiene al cerrar sesión.
     }
 
     private fun setupDrawer() {
@@ -104,8 +137,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 findNavController(R.id.nav_host_fragment_activity_main)
                     .navigate(R.id.navigation_edit_profile)
-            } catch (e: Exception) {
-                // Evita que la app se caiga si esa ruta no existe en el nav_graph.
+            } catch (_: Exception) {
             }
         }
 
@@ -124,7 +156,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadDrawerUser() {
         val name = sessionManager.getUserName()
         val email = sessionManager.getUserEmail()
-        val university = sessionManager.getUserUniversity()
 
         val displayName = when {
             name.isNotBlank() -> name
@@ -155,6 +186,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun logoutUser() {
+        NotificationSocketManager.stop()
         sessionManager.logout()
         goToLogin()
     }
@@ -166,5 +198,80 @@ class MainActivity : AppCompatActivity() {
 
         startActivity(intent)
         finish()
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionGranted = ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!permissionGranted) {
+                requestNotificationPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            } else {
+                Log.d("FCM_PERMISSION", "Permiso de notificaciones ya estaba concedido")
+            }
+        }
+    }
+
+    private fun registerFcmToken() {
+        FirebaseMessaging.getInstance().token
+            .addOnSuccessListener { token ->
+                Log.d("FCM_TOKEN", "Token generado: $token")
+
+                sessionManager.saveFcmToken(token)
+
+                val userId = sessionManager.getUserId()
+
+                Log.d("FCM_TOKEN", "UserId en sesión: $userId")
+
+                if (userId.isNotBlank()) {
+                    lifecycleScope.launch {
+                        try {
+                            val response = RetrofitClient.api.updateFcmToken(
+                                userId = userId,
+                                body = UpdateFcmTokenRequestDto(token = token)
+                            )
+
+                            Log.d(
+                                "FCM_TOKEN",
+                                "Token enviado al backend. Código: ${response.code()}"
+                            )
+                        } catch (e: Exception) {
+                            Log.e(
+                                "FCM_TOKEN",
+                                "Error enviando token al backend: ${e.message}"
+                            )
+                        }
+                    }
+                } else {
+                    Log.e("FCM_TOKEN", "No hay userId para enviar token")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(
+                    "FCM_TOKEN",
+                    "No se pudo obtener token FCM: ${e.message}"
+                )
+            }
+    }
+
+    private fun startNotificationSocket() {
+        val userId = sessionManager.getUserId()
+
+        if (userId.isNotBlank()) {
+            NotificationSocketManager.start(
+                context = this,
+                userId = userId
+            )
+        } else {
+            Log.e(
+                "NOTIF_SOCKET",
+                "No se inició socket: userId vacío"
+            )
+        }
     }
 }

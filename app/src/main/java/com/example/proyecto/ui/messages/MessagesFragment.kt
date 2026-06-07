@@ -32,11 +32,18 @@ class MessagesFragment : Fragment() {
         }
 
         adapter = ConversationPreviewAdapter(emptyList()) { conversation ->
+            viewModel.markAsRead(conversation.id)
+
             val bundle = Bundle().apply {
-                putInt("conversationId", conversation.id)
+                putString("conversationId", conversation.id)
                 putString("ownerName", conversation.name)
+                putString("otherUserId", conversation.otherUserId)
             }
-            findNavController().navigate(R.id.action_messages_to_chat, bundle)
+
+            findNavController().navigate(
+                R.id.action_messages_to_chat,
+                bundle
+            )
         }
 
         binding.rvChats.layoutManager = LinearLayoutManager(requireContext())
@@ -48,11 +55,22 @@ class MessagesFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             if (!error.isNullOrBlank()) {
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    error,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
+        viewModel.loadConversations()
+
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadConversations()
     }
 
     override fun onDestroyView() {
