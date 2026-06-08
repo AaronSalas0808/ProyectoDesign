@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,10 +25,33 @@ class DiscoveryFragment : Fragment() {
     private var _binding: FragmentDiscoveryBinding? = null
     private val binding get() = _binding!!
 
-    private var allBooks: List<Book> = emptyList()
-    private var selectedGenre: String = "Todos"
-    private var searchQuery: String = ""
     private lateinit var viewModel: DiscoveryViewModel
+    private lateinit var bookAdapter: BookAdapter
+
+    private var allBooks: List<Book> = emptyList()
+    private var filteredBooks: List<Book> = emptyList()
+
+    private var selectedGenre: String = "All"
+    private var searchQuery: String = ""
+
+    private var currentPage: Int = 1
+    private val booksPerPage: Int = 8
+
+    private var tvPageInfo: TextView? = null
+    private var btnPreviousPage: View? = null
+    private var btnNextPage: View? = null
+    private var tvEmptyState: TextView? = null
+    private var tvLoadingState: TextView? = null
+
+    private val genres = listOf(
+        "All",
+        "Fiction",
+        "Science",
+        "History",
+        "Philosophy",
+        "Technology",
+        "Art"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,38 +62,12 @@ class DiscoveryFragment : Fragment() {
 
         _binding = FragmentDiscoveryBinding.inflate(inflater, container, false)
 
-        binding.ivMenuBurger.setOnClickListener {
-            (requireActivity() as MainActivity).openDrawer()
-        }
-
-        binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
-
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-
-            override fun afterTextChanged(s: Editable?) {
-                searchQuery = s?.toString() ?: ""
-                applyFilter()
-            }
-        })
-
+        setupOptionalViews()
+        setupToolbar()
+        setupRecycler()
+        setupSearch()
         setupGenreChips()
-
-        viewModel.error.observe(viewLifecycleOwner) { error ->
-            if (!error.isNullOrEmpty()) {
-                android.widget.Toast.makeText(
-                    requireContext(),
-                    "Error: $error",
-                    android.widget.Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
-        viewModel.books.observe(viewLifecycleOwner) { books ->
-            allBooks = books
-            applyFilter()
-        }
+        setupObservers()
 
         return binding.root
     }
@@ -79,8 +77,76 @@ class DiscoveryFragment : Fragment() {
         viewModel.loadBooks()
     }
 
+    private fun setupOptionalViews() {
+        tvPageInfo = findViewByName("tvPageInfo")
+        btnPreviousPage = findViewByName("btnPreviousPage")
+        btnNextPage = findViewByName("btnNextPage")
+        tvEmptyState = findViewByName("tvEmptyState")
+        tvLoadingState = findViewByName("tvLoadingState")
+
+        btnPreviousPage?.setOnClickListener {
+            if (currentPage > 1) {
+                currentPage--
+                renderCurrentPage()
+            }
+        }
+
+        btnNextPage?.setOnClickListener {
+            val totalPages = getTotalPages()
+
+            if (currentPage < totalPages) {
+                currentPage++
+                renderCurrentPage()
+            }
+        }
+    }
+
+    private fun setupToolbar() {
+        binding.ivMenuBurger.setOnClickListener {
+            (requireActivity() as MainActivity).openDrawer()
+        }
+    }
+
+    private fun setupRecycler() {
+        bookAdapter = BookAdapter(
+            books = emptyList(),
+            onBookClick = { book ->
+                openBookInfo(book)
+            },
+            onOwnerClick = { book ->
+                openOwnerProfile(book)
+            }
+        )
+
+        binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvBooks.adapter = bookAdapter
+    }
+
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) = Unit
+
+            override fun afterTextChanged(s: Editable?) {
+                searchQuery = s?.toString().orEmpty()
+                currentPage = 1
+                applyFilter()
+            }
+        })
+    }
+
     private fun setupGenreChips() {
-        val genres = listOf("Todos") + resources.getStringArray(R.array.book_genres).toList()
         val container = binding.chipContainer
         container.removeAllViews()
 
@@ -94,30 +160,35 @@ class DiscoveryFragment : Fragment() {
                 height = dpToPx(36)
                 isClickable = true
                 isFocusable = true
-                setOnClickListener { selectChip(genre, this, container) }
+
+                setOnClickListener {
+                    selectedGenre = genre
+                    currentPage = 1
+                    refreshChipStyles(container)
+                    applyFilter()
+                }
             }
 
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                marginStart = if (genre == "Todos") 0 else dpToPx(10)
+                marginStart = if (genre == genres.first()) 0 else dpToPx(10)
             }
 
             chip.layoutParams = params
-            applyChipStyle(chip, genre == "Todos")
             container.addView(chip)
         }
+
+        refreshChipStyles(container)
     }
 
-    private fun selectChip(genre: String, selected: TextView, container: LinearLayout) {
+    private fun refreshChipStyles(container: LinearLayout) {
         for (i in 0 until container.childCount) {
             val chip = container.getChildAt(i) as? TextView ?: continue
-            applyChipStyle(chip, chip == selected)
+            val isSelected = chip.text.toString() == selectedGenre
+            applyChipStyle(chip, isSelected)
         }
-
-        selectedGenre = genre
-        applyFilter()
     }
 
     private fun applyChipStyle(chip: TextView, isSelected: Boolean) {
@@ -130,40 +201,135 @@ class DiscoveryFragment : Fragment() {
         }
     }
 
-    private fun applyFilter() {
-        val filtered = allBooks
-            .filter {
-                selectedGenre == "Todos" || it.genre.equals(selectedGenre, ignoreCase = true)
+    private fun setupObservers() {
+        viewModel.loading.observe(viewLifecycleOwner) { loading ->
+            tvLoadingState?.visibility = if (loading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (!error.isNullOrBlank()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Error: $error",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            .filter {
+        }
+
+        viewModel.books.observe(viewLifecycleOwner) { books ->
+            allBooks = books
+            currentPage = 1
+            applyFilter()
+        }
+    }
+
+    private fun applyFilter() {
+        filteredBooks = allBooks
+            .filter { book ->
+                selectedGenre == "All" ||
+                        book.genre.equals(selectedGenre, ignoreCase = true)
+            }
+            .filter { book ->
                 searchQuery.isBlank() ||
-                        it.title.contains(searchQuery, ignoreCase = true) ||
-                        it.author.contains(searchQuery, ignoreCase = true)
+                        book.title.contains(searchQuery, ignoreCase = true) ||
+                        book.author.contains(searchQuery, ignoreCase = true)
             }
 
-        binding.rvBooks.adapter = BookAdapter(
-            books = filtered,
-            onBookClick = { book ->
-                val bundle = Bundle().apply {
-                    putString("bookTitle", book.title)
-                    putString("bookAuthor", book.author)
-                    putString("bookYear", book.year)
-                    putString("bookPages", book.pages)
-                    putString("bookLanguage", book.language)
-                    putString("ownerName", book.ownerName)
-                    putString("bookSynopsis", book.synopsis)
-                    putParcelable("bookImageUri", book.imageUri)
-                    putString("bookImageUrl", book.getBestRemoteImageUrl())
-                }
-                findNavController().navigate(R.id.action_discovery_to_book_info, bundle)
-            },
-            onOwnerClick = { book ->
-                val bundle = Bundle().apply {
-                    putString("ownerName", book.ownerName)
-                }
-                findNavController().navigate(R.id.action_discovery_to_profile_owner, bundle)
-            }
+        renderCurrentPage()
+    }
+
+    private fun renderCurrentPage() {
+        val totalPages = getTotalPages()
+
+        if (currentPage > totalPages) {
+            currentPage = totalPages
+        }
+
+        if (currentPage < 1) {
+            currentPage = 1
+        }
+
+        val fromIndex = ((currentPage - 1) * booksPerPage)
+            .coerceAtLeast(0)
+            .coerceAtMost(filteredBooks.size)
+
+        val toIndex = (fromIndex + booksPerPage)
+            .coerceAtMost(filteredBooks.size)
+
+        val pageBooks = if (filteredBooks.isEmpty()) {
+            emptyList()
+        } else {
+            filteredBooks.subList(fromIndex, toIndex)
+        }
+
+        bookAdapter.updateBooks(pageBooks)
+
+        tvPageInfo?.text = "Page $currentPage of $totalPages"
+
+        btnPreviousPage?.isEnabled = currentPage > 1
+        btnPreviousPage?.alpha = if (currentPage > 1) 1f else 0.45f
+
+        btnNextPage?.isEnabled = currentPage < totalPages
+        btnNextPage?.alpha = if (currentPage < totalPages) 1f else 0.45f
+
+        tvEmptyState?.visibility =
+            if (filteredBooks.isEmpty()) View.VISIBLE else View.GONE
+
+        binding.rvBooks.visibility =
+            if (filteredBooks.isEmpty()) View.GONE else View.VISIBLE
+    }
+
+    private fun getTotalPages(): Int {
+        if (filteredBooks.isEmpty()) return 1
+
+        return kotlin.math.ceil(
+            filteredBooks.size / booksPerPage.toDouble()
+        ).toInt().coerceAtLeast(1)
+    }
+
+    private fun openBookInfo(book: Book) {
+        val bundle = Bundle().apply {
+            putString("bookId", book.id)
+            putString("bookTitle", book.title)
+            putString("bookAuthor", book.author)
+            putString("bookYear", book.year)
+            putString("bookPages", book.pages)
+            putString("bookLanguage", book.language)
+            putString("ownerName", book.ownerName)
+            putString("bookSynopsis", book.synopsis)
+            putParcelable("bookImageUri", book.imageUri)
+            putString("bookImageUrl", book.getBestRemoteImageUrl())
+        }
+
+        findNavController().navigate(
+            R.id.action_discovery_to_book_info,
+            bundle
         )
+    }
+
+    private fun openOwnerProfile(book: Book) {
+        val bundle = Bundle().apply {
+            putString("ownerName", book.ownerName)
+        }
+
+        findNavController().navigate(
+            R.id.action_discovery_to_profile_owner,
+            bundle
+        )
+    }
+
+    private fun <T : View> findViewByName(idName: String): T? {
+        val id = resources.getIdentifier(
+            idName,
+            "id",
+            requireContext().packageName
+        )
+
+        return if (id != 0) {
+            binding.root.findViewById(id)
+        } else {
+            null
+        }
     }
 
     private fun dpToPx(dp: Int): Int {

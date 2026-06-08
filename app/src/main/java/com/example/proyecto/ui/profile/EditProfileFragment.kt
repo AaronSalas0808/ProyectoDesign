@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentEditProfileBinding
 import com.example.proyecto.network.BookRepository
+import com.example.proyecto.network.LocalDataStore
 import com.example.proyecto.session.SessionManager
 import com.example.proyecto.ui.discovery.Book
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,11 +29,13 @@ class EditProfileFragment : Fragment() {
 
     private lateinit var sessionManager: SessionManager
     private lateinit var adapter: EditBookAdapter
+
     private val books = mutableListOf<Book>()
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { savePhotoLocally(it) }
-    }
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let { savePhotoLocally(it) }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,16 +50,28 @@ class EditProfileFragment : Fragment() {
             .findViewById<BottomNavigationView>(R.id.nav_view)
             ?.visibility = View.GONE
 
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
+        setupRecycler()
+        setupClicks()
 
+        loadProfile()
+        loadBooks()
+
+        return binding.root
+    }
+
+    private fun setupRecycler() {
         adapter = EditBookAdapter(books) { book ->
             confirmDelete(book)
         }
 
         binding.rvBooks.layoutManager = LinearLayoutManager(requireContext())
         binding.rvBooks.adapter = adapter
+    }
+
+    private fun setupClicks() {
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.avatarContainer.setOnClickListener {
             pickImage.launch("image/*")
@@ -65,11 +80,6 @@ class EditProfileFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             saveProfile()
         }
-
-        loadProfile()
-        loadBooks()
-
-        return binding.root
     }
 
     private fun loadProfile() {
@@ -81,8 +91,10 @@ class EditProfileFragment : Fragment() {
         binding.etName.setText(sessionManager.getDisplayName())
 
         val photoPath = sessionManager.getProfilePhotoPath()
+
         if (photoPath.isNotBlank()) {
             val file = File(photoPath)
+
             if (file.exists()) {
                 binding.ivProfilePhoto.setImageURI(Uri.fromFile(file))
             }
@@ -94,12 +106,18 @@ class EditProfileFragment : Fragment() {
             try {
                 val userName = sessionManager.getDisplayName()
                 val userEmail = sessionManager.getUserEmail()
+                val userId = sessionManager.getUserId()
 
-                val allBooks = BookRepository.getBooks()
+                val apiBooks = BookRepository.getBooks()
+                val localBooks = LocalDataStore.localBooks
+
+                val allBooks = (localBooks + apiBooks).distinctBy { it.id }
 
                 val myBooks = allBooks.filter { book ->
                     book.ownerName.equals(userName, ignoreCase = true) ||
-                            book.ownerName.equals(userEmail, ignoreCase = true)
+                            book.ownerName.equals(userEmail, ignoreCase = true) ||
+                            book.ownerName.equals(userId, ignoreCase = true) ||
+                            book.ownerName.equals("Yo", ignoreCase = true)
                 }
 
                 books.clear()
@@ -107,9 +125,7 @@ class EditProfileFragment : Fragment() {
 
                 adapter.notifyDataSetChanged()
                 updateBooksCount()
-
-                binding.tvEmptyBooks.visibility =
-                    if (books.isEmpty()) View.VISIBLE else View.GONE
+                updateEmptyState()
 
             } catch (e: Exception) {
                 Toast.makeText(
@@ -118,8 +134,7 @@ class EditProfileFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                binding.tvEmptyBooks.visibility =
-                    if (books.isEmpty()) View.VISIBLE else View.GONE
+                updateEmptyState()
             }
         }
     }
@@ -138,13 +153,17 @@ class EditProfileFragment : Fragment() {
     private fun deleteBook(book: Book) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                BookRepository.deleteBook(book.id)
+                if (book.id.startsWith("local-")) {
+                    LocalDataStore.localBooks.removeAll { it.id == book.id }
+                } else {
+                    BookRepository.deleteBook(book.id)
+                }
 
-                adapter.removeBook(book)
+                books.removeAll { it.id == book.id }
+                adapter.notifyDataSetChanged()
+
                 updateBooksCount()
-
-                binding.tvEmptyBooks.visibility =
-                    if (books.isEmpty()) View.VISIBLE else View.GONE
+                updateEmptyState()
 
                 Toast.makeText(
                     requireContext(),
@@ -167,6 +186,7 @@ class EditProfileFragment : Fragment() {
 
         if (newName.isBlank()) {
             binding.etName.error = "El nombre no puede estar vacío"
+            binding.etName.requestFocus()
             return
         }
 
@@ -189,11 +209,18 @@ class EditProfileFragment : Fragment() {
         try {
             val userKey = when {
                 sessionManager.getUserId().isNotBlank() -> sessionManager.getUserId()
-                sessionManager.getUserEmail().isNotBlank() -> sessionManager.getUserEmail().substringBefore("@")
+                sessionManager.getUserEmail().isNotBlank() -> {
+                    sessionManager.getUserEmail().substringBefore("@")
+                }
                 else -> "default_user"
             }
 
-            val dest = File(requireContext().filesDir, "profile_photo_$userKey.jpg")
+            val safeUserKey = userKey.replace(Regex("[^A-Za-z0-9_-]"), "_")
+
+            val dest = File(
+                requireContext().filesDir,
+                "profile_photo_$safeUserKey.jpg"
+            )
 
             requireContext().contentResolver.openInputStream(uri)?.use { input ->
                 dest.outputStream().use { output ->
@@ -207,6 +234,12 @@ class EditProfileFragment : Fragment() {
 
             (requireActivity() as? com.example.proyecto.MainActivity)?.refreshDrawerUser()
 
+            Toast.makeText(
+                requireContext(),
+                "Foto actualizada",
+                Toast.LENGTH_SHORT
+            ).show()
+
         } catch (e: Exception) {
             Toast.makeText(
                 requireContext(),
@@ -219,6 +252,11 @@ class EditProfileFragment : Fragment() {
     private fun updateBooksCount() {
         binding.tvBooksCount.text =
             "${books.size} libro${if (books.size != 1) "s" else ""}"
+    }
+
+    private fun updateEmptyState() {
+        binding.tvEmptyBooks.visibility =
+            if (books.isEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun onDestroyView() {

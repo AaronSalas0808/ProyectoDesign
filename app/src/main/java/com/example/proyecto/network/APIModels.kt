@@ -18,10 +18,51 @@ data class RegisterRequestDto(
 
 data class UserDto(
     val id: String? = null,
+    val uid: String? = null,
+    val userId: String? = null,
     val name: String? = null,
+    val fullName: String? = null,
+    val displayName: String? = null,
+    val username: String? = null,
     val email: String? = null,
-    val university: String? = null
+    val university: String? = null,
+    val initials: String? = null,
+    val rating: Double? = null
 )
+
+data class UserResponseDto(
+    val user: UserDto? = null,
+    val data: UserDto? = null,
+    val content: UserDto? = null,
+
+    val id: String? = null,
+    val uid: String? = null,
+    val userId: String? = null,
+    val name: String? = null,
+    val fullName: String? = null,
+    val displayName: String? = null,
+    val username: String? = null,
+    val email: String? = null,
+    val university: String? = null,
+    val initials: String? = null,
+    val rating: Double? = null
+) {
+    fun toUserDto(): UserDto {
+        return user ?: data ?: content ?: UserDto(
+            id = id,
+            uid = uid,
+            userId = userId,
+            name = name,
+            fullName = fullName,
+            displayName = displayName,
+            username = username,
+            email = email,
+            university = university,
+            initials = initials,
+            rating = rating
+        )
+    }
+}
 
 data class AuthResponseDto(
     val user: UserDto? = null,
@@ -37,48 +78,85 @@ data class ErrorResponseDto(
 // -------------------- BOOKS --------------------
 
 data class OwnerDto(
-    val initials: String,
-    val name: String,
-    val maxDays: Int? = null
-)
-
-data class BookItemDto(
-    val id: Int,
-    val title: String,
-    val author: String,
-    val year: Int,
-    val pages: Int,
-    val language: String,
-    val genre: String,
-    val color: String,
-    val owner: OwnerDto,
-    val images: List<String>? = null,
-    @SerializedName("cover_url")
-    val coverUrl: String? = null,
-    val isbn: String? = null
+    val initials: String? = null,
+    val name: String? = null,
+    val maxDays: Int? = null,
+    val rating: Double? = null
 )
 
 data class BooksResponseDto(
-    val data: List<BookItemDto>,
-    val total: Int,
-    val page: Int
+    val data: List<BookItemDto>? = null,
+    val content: List<BookItemDto>? = null,
+    val total: Int? = null,
+    val page: Int? = null,
+    val totalPages: Int? = null,
+    val totalElements: Int? = null
+)
+
+data class BookItemDto(
+    val id: String? = null,
+    val title: String? = null,
+    val author: String? = null,
+    val year: Int? = null,
+    val publishYear: Int? = null,
+    val pages: Int? = null,
+    val pageCount: Int? = null,
+    val language: String? = null,
+    val genre: String? = null,
+    val color: String? = null,
+    val condition: String? = null,
+    val synopsis: String? = null,
+    val description: String? = null,
+
+    val uploadedBy: String? = null,
+
+    @SerializedName("uploaded_by")
+    val uploadedBySnake: String? = null,
+
+    val owner: OwnerDto? = null,
+
+    val image: String? = null,
+    val images: List<String>? = null,
+
+    @SerializedName("cover_url")
+    val coverUrlSnake: String? = null,
+
+    val coverUrl: String? = null,
+    val isbn: String? = null,
+    val loanDays: Int? = null
 )
 
 data class BookDetailDto(
-    val id: Int,
-    val title: String,
-    val author: String,
-    val year: Int,
-    val pages: Int,
-    val language: String,
-    val genre: String,
-    val color: String,
-    val synopsis: String,
-    val owner: OwnerDto,
+    val id: String? = null,
+    val title: String? = null,
+    val author: String? = null,
+    val year: Int? = null,
+    val publishYear: Int? = null,
+    val pages: Int? = null,
+    val pageCount: Int? = null,
+    val language: String? = null,
+    val genre: String? = null,
+    val color: String? = null,
+    val condition: String? = null,
+    val synopsis: String? = null,
+    val description: String? = null,
+
+    val uploadedBy: String? = null,
+
+    @SerializedName("uploaded_by")
+    val uploadedBySnake: String? = null,
+
+    val owner: OwnerDto? = null,
+
+    val image: String? = null,
     val images: List<String>? = null,
+
     @SerializedName("cover_url")
+    val coverUrlSnake: String? = null,
+
     val coverUrl: String? = null,
-    val isbn: String? = null
+    val isbn: String? = null,
+    val loanDays: Int? = null
 )
 
 data class CreateBookRequestDto(
@@ -92,11 +170,11 @@ data class CreateBookRequestDto(
 )
 
 data class CreateBookResponseDto(
-    val id: Int,
-    val title: String,
-    val author: String,
-    val message: String,
-    val status: String
+    val id: String? = null,
+    val title: String? = null,
+    val author: String? = null,
+    val message: String? = null,
+    val status: String? = null
 )
 
 data class UpdateBookRequestDto(
@@ -105,9 +183,9 @@ data class UpdateBookRequestDto(
 )
 
 data class BasicActionResponseDto(
-    val id: Int,
-    val message: String,
-    val status: String
+    val id: String? = null,
+    val message: String? = null,
+    val status: String? = null
 )
 
 // -------------------- COMMUNITY OLD DTO --------------------
@@ -177,7 +255,7 @@ data class CreateCommentRequestDto(
     val content: String
 )
 
-// -------------------- CONVERSATIONS --------------------
+// -------------------- CONVERSATIONS OLD --------------------
 
 data class ConversationItemDto(
     val id: Int,

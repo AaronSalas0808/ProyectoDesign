@@ -24,14 +24,27 @@ interface ApiService {
         @Body body: RegisterRequestDto
     ): Response<ResponseBody>
 
+    @GET("users/{id}")
+    suspend fun getUserById(
+        @Path("id") id: String
+    ): UserResponseDto
+
+    @POST("users/{userId}/fcm-token")
+    suspend fun updateFcmToken(
+        @Path("userId") userId: String,
+        @Body body: UpdateFcmTokenRequestDto
+    ): Response<Unit>
+
     // -------------------- BOOKS --------------------
 
     @GET("books")
-    suspend fun getBooks(): BooksResponseDto
+    suspend fun getBooks(
+        @Query("size") size: Int = 100
+    ): BooksResponseDto
 
     @GET("books/{id}")
     suspend fun getBookById(
-        @Path("id") id: Int
+        @Path("id") id: String
     ): BookDetailDto
 
     @POST("books")
@@ -41,13 +54,13 @@ interface ApiService {
 
     @PUT("books/{id}")
     suspend fun updateBook(
-        @Path("id") id: Int,
+        @Path("id") id: String,
         @Body body: UpdateBookRequestDto
     ): BasicActionResponseDto
 
     @DELETE("books/{id}")
     suspend fun deleteBook(
-        @Path("id") id: Int
+        @Path("id") id: String
     ): BasicActionResponseDto
 
     // -------------------- COMMUNITY OLD --------------------
@@ -90,7 +103,7 @@ interface ApiService {
         @Body body: CreateCommentRequestDto
     ): Response<CommentApiDto>
 
-    // -------------------- CONVERSATIONS --------------------
+    // -------------------- CONVERSATIONS OLD --------------------
 
     @GET("conversations")
     suspend fun getConversations(): ConversationsResponseDto
@@ -106,7 +119,7 @@ interface ApiService {
         @Body body: SendConversationMessageRequestDto
     ): Response<Unit>
 
-// -------------------- CHATS API --------------------
+    // -------------------- CHATS API --------------------
 
     @GET("chats/user/{userId}")
     suspend fun getUserChats(
@@ -141,11 +154,4 @@ interface ApiService {
         @Path("chatId") chatId: String,
         @Query("readerId") readerId: String
     ): Response<Unit>
-
-    @POST("users/{userId}/fcm-token")
-    suspend fun updateFcmToken(
-        @Path("userId") userId: String,
-        @Body body: UpdateFcmTokenRequestDto
-    ): Response<Unit>
 }
-

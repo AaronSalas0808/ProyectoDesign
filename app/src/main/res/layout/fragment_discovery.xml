@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#FFFFFF"
     tools:context=".ui.discovery.DiscoveryFragment">
 
+    <!-- HEADER -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -43,8 +44,10 @@
             android:src="@drawable/ic_book_logo"
             android:scaleType="fitCenter"
             android:contentDescription="@null" />
+
     </LinearLayout>
 
+    <!-- SEARCH -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -67,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:hint="Find your next read..."
+            android:hint="Search by title, author..."
             android:textSize="14sp"
             android:textColorHint="#9E9E9E"
             android:textColor="#1A1A1A"
@@ -75,8 +78,10 @@
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:singleLine="true" />
+
     </LinearLayout>
 
+    <!-- GENRES -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,6 +99,31 @@
 
     </HorizontalScrollView>
 
+    <!-- LOADING -->
+    <TextView
+        android:id="@+id/tvLoadingState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cargando libros..."
+        android:textColor="#757575"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="gone" />
+
+    <!-- EMPTY STATE -->
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No hay libros disponibles.\nSé el primero en agregar un libro a la comunidad."
+        android:textColor="#757575"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:padding="24dp"
+        android:visibility="gone" />
+
+    <!-- BOOK LIST -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBooks"
         android:layout_width="match_parent"
@@ -102,7 +132,53 @@
         android:clipToPadding="false"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
+        android:paddingBottom="12dp"
         tools:listitem="@layout/book_card" />
+
+    <!-- PAGINATION -->
+    <LinearLayout
+        android:id="@+id/paginationContainer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="4dp">
+
+        <Button
+            android:id="@+id/btnPreviousPage"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="← Previous"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null"
+            android:paddingHorizontal="14dp" />
+
+        <TextView
+            android:id="@+id/tvPageInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Page 1 of 1"
+            android:textColor="#757575"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:fontFamily="serif" />
+
+        <Button
+            android:id="@+id/btnNextPage"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Next →"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button_primary"
+            android:stateListAnimator="@null"
+            android:paddingHorizontal="14dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

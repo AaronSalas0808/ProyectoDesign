@@ -5,16 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.proyecto.R
 import com.example.proyecto.databinding.FragmentBookInfoBinding
+import com.example.proyecto.network.BookRepository
+import kotlinx.coroutines.launch
 
 class BookInfoFragment : Fragment() {
 
     private var _binding: FragmentBookInfoBinding? = null
     private val binding get() = _binding!!
+
+    private var currentBook: Book? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,64 +29,123 @@ class BookInfoFragment : Fragment() {
     ): View {
         _binding = FragmentBookInfoBinding.inflate(inflater, container, false)
 
+        bindFromArguments()
+        setupClicks()
+        loadBookFromApiIfPossible()
+
+        return binding.root
+    }
+
+    private fun bindFromArguments() {
         val args = arguments
 
-        binding.tvBookTitle.text = args?.getString("bookTitle") ?: ""
-        binding.tvAuthor.text = args?.getString("bookAuthor") ?: ""
-        binding.tvYear.text = args?.getString("bookYear") ?: ""
-        binding.tvOwnerName.text = args?.getString("ownerName") ?: ""
+        val book = Book(
+            id = args?.getString("bookId").orEmpty(),
+            title = args?.getString("bookTitle").orEmpty(),
+            author = args?.getString("bookAuthor").orEmpty(),
+            year = args?.getString("bookYear").orEmpty(),
+            pages = args?.getString("bookPages").orEmpty(),
+            language = args?.getString("bookLanguage").orEmpty(),
+            ownerName = args?.getString("ownerName").orEmpty(),
+            synopsis = args?.getString("bookSynopsis").orEmpty(),
+            imageUri = args?.getParcelable<Uri>("bookImageUri"),
+            coverUrl = args?.getString("bookImageUrl")
+        )
 
-        val pages = args?.getString("bookPages") ?: ""
-        val language = args?.getString("bookLanguage") ?: ""
-        binding.tvPages.text = "$pages Pages"
-        binding.tvLanguage.text = language
+        currentBook = book
+        bindBook(book)
+    }
 
-        val synopsis = args?.getString("bookSynopsis") ?: ""
-        if (synopsis.isNotEmpty()) {
-            binding.tvStory.text = synopsis
+    private fun loadBookFromApiIfPossible() {
+        val id = currentBook?.id.orEmpty()
+
+        if (id.isBlank() || id.startsWith("local-")) {
+            return
         }
 
-        val imageUri = args?.getParcelable<Uri>("bookImageUri")
-        val imageUrl = args?.getString("bookImageUrl")
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val apiBook = BookRepository.getBookById(id)
+                currentBook = apiBook
+                bindBook(apiBook)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "No se pudo actualizar el libro",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 
-        val imageSource: Any = imageUri ?: imageUrl ?: R.drawable.placeholder_book_cover
+    private fun bindBook(book: Book) {
+        binding.tvBookTitle.text = book.title
+        binding.tvAuthor.text = book.author
+        binding.tvYear.text = book.year
+        binding.tvOwnerName.text = book.ownerName
+
+        binding.tvPages.text = if (book.pages.isNotBlank()) {
+            "${book.pages} Pages"
+        } else {
+            ""
+        }
+
+        binding.tvLanguage.text = book.language
+
+        binding.tvStory.text = if (book.synopsis.isNotBlank()) {
+            book.synopsis
+        } else {
+            "No synopsis available."
+        }
+
+        val imageSource: Any = book.imageUri
+            ?: book.getBestRemoteImageUrl()
+            ?: R.drawable.placeholder_book_cover
 
         binding.ivBookCover.load(imageSource) {
             crossfade(true)
             placeholder(R.drawable.placeholder_book_cover)
             error(R.drawable.placeholder_book_cover)
         }
+    }
 
+    private fun setupClicks() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
         val ownerClickListener = View.OnClickListener {
+            val book = currentBook ?: return@OnClickListener
+
             val bundle = Bundle().apply {
-                putString("ownerName", args?.getString("ownerName") ?: "")
+                putString("ownerName", book.ownerName)
             }
-            findNavController().navigate(R.id.action_book_info_to_profile_owner, bundle)
+
+            findNavController().navigate(
+                R.id.action_book_info_to_profile_owner,
+                bundle
+            )
         }
 
         binding.ivOwnerProfile.setOnClickListener(ownerClickListener)
         binding.tvOwnerName.setOnClickListener(ownerClickListener)
 
         binding.btnRequestLoan.setOnClickListener {
-            val bookTitle = args?.getString("bookTitle") ?: ""
-            val ownerName = args?.getString("ownerName") ?: ""
+            val book = currentBook ?: return@setOnClickListener
 
             val bundle = Bundle().apply {
-                putString("ownerName", ownerName)
+                putString("ownerName", book.ownerName)
                 putString(
                     "defaultMessage",
-                    "Hola estoy interesado en poder leer $bookTitle ¿se encuentra disponible?"
+                    "Hola estoy interesado en poder leer ${book.title} ¿se encuentra disponible?"
                 )
             }
 
-            findNavController().navigate(R.id.action_book_info_to_chat, bundle)
+            findNavController().navigate(
+                R.id.action_book_info_to_chat,
+                bundle
+            )
         }
-
-        return binding.root
     }
 
     override fun onDestroyView() {

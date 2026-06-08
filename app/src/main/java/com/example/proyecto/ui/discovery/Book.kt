@@ -3,7 +3,7 @@ package com.example.proyecto.ui.discovery
 import android.net.Uri
 
 data class Book(
-    val id: Int,
+    val id: String,
     val title: String,
     val author: String,
     val year: String,

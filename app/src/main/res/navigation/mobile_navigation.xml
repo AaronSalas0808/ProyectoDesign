@@ -23,18 +23,27 @@
         android:name="com.example.proyecto.ui.discovery.BookInfoFragment"
         android:label="Book Info"
         tools:layout="@layout/fragment_book_info">
+
+        <argument
+            android:name="bookId"
+            app:argType="string"
+            android:defaultValue="" />
+
         <argument android:name="bookTitle"    app:argType="string" android:defaultValue="" />
         <argument android:name="bookAuthor"   app:argType="string" android:defaultValue="" />
         <argument android:name="bookYear"     app:argType="string" android:defaultValue="" />
         <argument android:name="bookPages"    app:argType="string" android:defaultValue="" />
         <argument android:name="bookLanguage" app:argType="string" android:defaultValue="" />
         <argument android:name="ownerName"    app:argType="string" android:defaultValue="" />
+
         <action
             android:id="@+id/action_book_info_to_profile_owner"
             app:destination="@id/navigation_profile_owner" />
+
         <action
             android:id="@+id/action_book_info_to_chat"
             app:destination="@id/navigation_chat" />
+
     </fragment>
 
     <fragment

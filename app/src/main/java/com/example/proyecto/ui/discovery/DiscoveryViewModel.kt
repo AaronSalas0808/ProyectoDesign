@@ -10,8 +10,11 @@ import kotlinx.coroutines.launch
 
 class DiscoveryViewModel : ViewModel() {
 
-    private val _books = MutableLiveData<List<Book>>()
+    private val _books = MutableLiveData<List<Book>>(emptyList())
     val books: LiveData<List<Book>> = _books
+
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
@@ -22,14 +25,29 @@ class DiscoveryViewModel : ViewModel() {
 
     fun loadBooks() {
         viewModelScope.launch {
+            _loading.value = true
+
             try {
                 val apiBooks = BookRepository.getBooks()
-                _books.value = LocalDataStore.localBooks + apiBooks
+
+                val mergedBooks = (LocalDataStore.localBooks + apiBooks)
+                    .distinctBy { it.id }
+
+                _books.value = mergedBooks
                 _error.value = null
+
             } catch (e: Exception) {
-                android.util.Log.e("DiscoveryViewModel", "Error loading books: ${e.message}", e)
+                android.util.Log.e(
+                    "DiscoveryViewModel",
+                    "Error loading books: ${e.message}",
+                    e
+                )
+
                 _books.value = LocalDataStore.localBooks
                 _error.value = e.message ?: "Error desconocido"
+
+            } finally {
+                _loading.value = false
             }
         }
     }
