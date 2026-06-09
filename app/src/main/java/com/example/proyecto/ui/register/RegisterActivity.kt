@@ -145,10 +145,13 @@ class RegisterActivity : AppCompatActivity() {
                 return
             }
 
-            password.length < 8 -> {
-                etPassword.error = "Password must be at least 8 characters"
-                etPassword.requestFocus()
-                return
+            else -> {
+                val passwordError = validatePassword(password)
+                if (passwordError != null) {
+                    etPassword.error = passwordError
+                    etPassword.requestFocus()
+                    return
+                }
             }
         }
 
@@ -158,6 +161,14 @@ class RegisterActivity : AppCompatActivity() {
             university = university,
             password = password
         )
+    }
+
+    private fun validatePassword(password: String): String? {
+        if (password.length < 8) return "Password must be at least 8 characters"
+        if (!password.any { it.isUpperCase() }) return "Password must contain at least one uppercase letter"
+        if (!password.any { it.isDigit() }) return "Password must contain at least one number"
+        if (!password.any { !it.isLetterOrDigit() }) return "Password must contain at least one special character"
+        return null
     }
 
     private fun registerUser(

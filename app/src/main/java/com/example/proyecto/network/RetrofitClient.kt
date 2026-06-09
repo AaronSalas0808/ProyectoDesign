@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "https://bookloop-api.azure-api.net/v1/"
+    private const val BASE_URL = "https://bookloop-cert-api.azure-api.net/v1/"
     private const val SUBSCRIPTION_KEY = "6f463ca55cfe4e258de8819701678fda"
 
     private val client = OkHttpClient.Builder()
